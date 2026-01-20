@@ -391,7 +391,7 @@ const handleClick = (event: MouseEvent) => {
 </script>
 
 <template>
-  <div class="relative inline-block">
+  <article class="relative inline-block">
     <!-- Loading placeholder -->
     <div v-if="isLoading" :class="imageClasses" class="animate-pulse bg-gray-200" />
 
@@ -419,5 +419,5 @@ const handleClick = (event: MouseEvent) => {
         />
       </svg>
     </div>
-  </div>
+  </article>
 </template>
