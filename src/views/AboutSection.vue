@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BaseCircleIcon from '@/components/BaseCircleIcon.vue'
+import BaseCircleLink from '@/components/BaseCircleLink.vue'
 </script>
 
 <template>
@@ -27,19 +27,19 @@ import BaseCircleIcon from '@/components/BaseCircleIcon.vue'
           </p>
         </div>
         <div class="flex gap-2 items-center">
-          <BaseCircleIcon
+          <BaseCircleLink
             href="https://www.linkedin.com/in/ragil-budhi-ajie/"
             icon-prefix="fab"
             icon-name="linkedin"
             icon-size="lg"
           />
-          <BaseCircleIcon
+          <BaseCircleLink
             href="https://gitlab.com/ragbuaj"
             icon-prefix="fab"
             icon-name="gitlab"
             icon-size="lg"
           />
-          <BaseCircleIcon
+          <BaseCircleLink
             href="https://www.instagram.com/ragilbuaj/"
             icon-prefix="fab"
             icon-name="instagram"
