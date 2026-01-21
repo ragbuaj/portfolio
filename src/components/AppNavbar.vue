@@ -16,12 +16,21 @@ watch(
     isMobileMenuOpen.value = false
   },
 )
+
+// Prevent scrolling when mobile menu is open
+watch(isMobileMenuOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
 </script>
 
 <template>
   <nav
-    class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 transition-all duration-300"
-    :class="{ 'bg-[#050505]/90 backdrop-blur-md': isMobileMenuOpen }"
+    class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-6 md:px-12 transition-all duration-300 bg-[#050505]/50 backdrop-blur-md md:bg-transparent md:backdrop-blur-none"
+    :class="{ '!bg-black': isMobileMenuOpen }"
   >
     <!-- Logo -->
     <RouterLink to="/" class="flex items-center gap-2 group z-50">
