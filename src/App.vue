@@ -11,7 +11,7 @@ import FooterBar from '@/components/FooterBar.vue'
     <AppNavbar />
 
     <RouterView v-slot="{ Component }">
-      <Transition name="fade" mode="out-in">
+      <Transition name="slide" mode="out-in">
         <component :is="Component" />
       </Transition>
     </RouterView>
@@ -22,16 +22,20 @@ import FooterBar from '@/components/FooterBar.vue'
 
 <style>
 /* Page Transition Animations */
-.fade-enter-active,
-.fade-leave-active {
+.slide-enter-active,
+.slide-leave-active {
   transition:
     opacity 0.3s ease,
     transform 0.3s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.slide-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateX(20px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 </style>
