@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div
-    class="group relative bg-[#0A0A0A] border border-white/5 rounded-[2.5rem] p-8 md:p-12 min-h-[400px] flex flex-col justify-between hover:border-white/20 transition-all duration-500 overflow-hidden cursor-pointer"
+    class="group relative bg-[#0A0A0A] border border-white/15 rounded-[2.5rem] p-8 md:p-12 min-h-[400px] flex flex-col justify-between hover:border-white/20 transition-all duration-500 overflow-hidden cursor-pointer"
   >
     <!-- Top Meta -->
     <div class="flex justify-between items-start z-10">

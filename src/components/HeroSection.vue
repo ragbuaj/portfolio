@@ -60,13 +60,13 @@ import { RouterLink } from 'vue-router'
           ></div>
 
           <!-- Rings -->
-          <div class="absolute border border-white/10 rounded-full w-[30%] h-[30%]"></div>
-          <div class="absolute border border-white/10 rounded-full w-[60%] h-[60%]"></div>
-          <div class="absolute border border-white/10 rounded-full w-[100%] h-[100%]"></div>
+          <div class="absolute border border-white/20 rounded-full w-[30%] h-[30%]"></div>
+          <div class="absolute border border-white/20 rounded-full w-[60%] h-[60%]"></div>
+          <div class="absolute border border-white/20 rounded-full w-[100%] h-[100%]"></div>
 
           <!-- Crosshairs -->
-          <div class="absolute w-full h-[1px] bg-white/5 top-1/2 left-0"></div>
-          <div class="absolute h-full w-[1px] bg-white/5 left-1/2 top-0"></div>
+          <div class="absolute w-full h-[1px] bg-white/10 top-1/2 left-0"></div>
+          <div class="absolute h-full w-[1px] bg-white/10 left-1/2 top-0"></div>
 
           <!-- Rotating Scan Line -->
           <div class="absolute w-full h-full animate-spin-slow opacity-30">

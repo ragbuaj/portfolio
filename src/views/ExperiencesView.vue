@@ -20,11 +20,11 @@ const experiences = [
       <h1 class="font-oswald text-6xl md:text-8xl text-white">EXPERIENCES</h1>
     </div>
 
-    <div class="relative border-l border-white/10 ml-4 md:ml-12 pl-8 md:pl-16 flex flex-col gap-16">
+    <div class="relative border-l border-white/20 ml-4 md:ml-12 pl-8 md:pl-16 flex flex-col gap-16">
       <div v-for="(exp, index) in experiences" :key="index" class="relative group">
         <!-- Dot Indicator -->
         <div
-          class="absolute -left-[41px] md:-left-[73px] top-2 w-5 h-5 bg-[#050505] border border-white/20 rounded-full flex items-center justify-center group-hover:border-white transition-colors"
+          class="absolute -left-[42.5px] md:-left-[74px] top-2 w-5 h-5 bg-[#050505] border border-white/20 rounded-full flex items-center justify-center group-hover:border-white transition-colors"
         >
           <div
             class="w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"

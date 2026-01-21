@@ -132,7 +132,7 @@ const techStack = ['TypeScript', 'Vue', 'Node.js', 'Golang', 'PHP', 'PostgreSQL'
           <input
             type="text"
             placeholder="Your name"
-            class="bg-transparent border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-white/40 transition-colors"
+            class="bg-transparent border border-white/20 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-white/40 transition-colors"
           />
         </div>
 
@@ -141,7 +141,7 @@ const techStack = ['TypeScript', 'Vue', 'Node.js', 'Golang', 'PHP', 'PostgreSQL'
           <input
             type="email"
             placeholder="email@address.com"
-            class="bg-transparent border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-white/40 transition-colors"
+            class="bg-transparent border border-white/20 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-white/40 transition-colors"
           />
         </div>
 
@@ -150,7 +150,7 @@ const techStack = ['TypeScript', 'Vue', 'Node.js', 'Golang', 'PHP', 'PostgreSQL'
           <textarea
             rows="5"
             placeholder="Tell me about your project..."
-            class="bg-transparent border border-white/10 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-white/40 transition-colors resize-none"
+            class="bg-transparent border border-white/20 rounded-xl px-6 py-4 text-white placeholder-gray-600 focus:outline-none focus:border-white/40 transition-colors resize-none"
           ></textarea>
         </div>
 
