@@ -42,6 +42,29 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Tanpa langkah ini, secret yang belum diisi hanya menghasilkan
+      # "exit code 1" tanpa keterangan apa pun.
+      - name: Pastikan secret sudah diisi
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -uo pipefail
+          kurang=""
+          for nama in SSH_HOST SSH_USER SSH_KEY DEPLOY_PATH; do
+            eval "isi=\${$nama:-}"
+            [ -z "$isi" ] && kurang="$kurang $nama"
+          done
+          if [ -n "$kurang" ]; then
+            echo "::error::Secret berikut belum diisi:$kurang"
+            echo "Isi lewat Settings -> Secrets and variables -> Actions."
+            echo "Daftar lengkapnya ada di bagian Deploy pada README."
+            exit 1
+          fi
+          echo "Semua secret wajib sudah ada."
+
       - name: Siapkan kunci SSH
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }}
@@ -62,7 +85,7 @@ jobs:
             # Cadangan: percaya kunci yang ditemui saat ini. Berfungsi, tapi
             # tidak melindungi dari server palsu. Isi SSH_KNOWN_HOSTS untuk
             # menutup celah itu.
-            ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+            ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts
           fi
           chmod 600 ~/.ssh/known_hosts
 
