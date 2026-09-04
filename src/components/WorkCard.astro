@@ -94,23 +94,28 @@ const linkProps = d.url
     --kartu-tepi: var(--cream);
     --kartu-bayang: var(--accent);
   }
+  /* Bayangan keras harus kontras terhadap LATAR HALAMAN, bukan terhadap
+     kartunya. Halaman ini berlatar --ink, jadi bayangan --ink dirender tapi
+     mustahil terlihat — itulah kenapa efek angkat kartu berwarna sebelumnya
+     terasa hilang. Limau dipakai sebagai warna angkat di semua kartu; kartu
+     limau sendiri memakai krem supaya tidak melebur. */
   .tone-accent {
     --kartu-bg: var(--accent);
     --kartu-fg: var(--ink);
     --kartu-tepi: var(--ink);
-    --kartu-bayang: var(--ink);
+    --kartu-bayang: var(--cream);
   }
   .tone-accent2 {
     --kartu-bg: var(--accent2);
     --kartu-fg: var(--ink);
     --kartu-tepi: var(--ink);
-    --kartu-bayang: var(--ink);
+    --kartu-bayang: var(--accent);
   }
   .tone-accent3 {
     --kartu-bg: var(--accent3);
     --kartu-fg: var(--ink);
     --kartu-tepi: var(--ink);
-    --kartu-bayang: var(--ink);
+    --kartu-bayang: var(--accent);
   }
 
   /* ---------- Kartu teks (tanpa gambar) ---------- */
