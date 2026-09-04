@@ -63,6 +63,17 @@ jobs:
             echo "Daftar lengkapnya ada di bagian Deploy pada README."
             exit 1
           fi
+          # DEPLOY_PATH harus absolut. Kalau tidak, rsync menyelesaikannya
+          # terhadap home directory dan gagal dengan pesan mkdir yang tidak
+          # menyebut sebabnya. Ini mudah terjadi kalau secret-nya diisi dari
+          # Git Bash di Windows, yang mengubah path POSIX jadi path Windows.
+          case "$DEPLOY_PATH" in
+            /*) ;;
+            *) echo "::error::DEPLOY_PATH harus diawali '/' (nilai sekarang tidak absolut)."
+               echo "Isi ulang dari PowerShell atau cmd, bukan dari Git Bash."
+               exit 1 ;;
+          esac
+
           echo "Semua secret wajib sudah ada."
 
       - name: Siapkan kunci SSH
