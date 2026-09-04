@@ -1,5 +1,6 @@
 ---
 title: Project Management
+stack: Nuxt + Go + Postgres
 year: 2024
 coverLabel: screenshot — 16:10
 coverAlt: ''
@@ -9,4 +10,5 @@ featured: true
 draft: false
 ---
 
-GANTI KETERANGAN INI. Perencanaan dan pemantauan proyek.
+Manajemen proyek: penjadwalan, pendataan barang dan bahan baku, serta
+pemantauan jalannya proyek.

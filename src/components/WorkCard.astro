@@ -10,7 +10,10 @@ const { project } = Astro.props;
 const d = project.data;
 
 const Tag = d.url ? 'a' : 'article';
-const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
+// Link keluar dibuka di tab baru supaya pengunjung tidak meninggalkan situs.
+const linkProps = d.url
+  ? { href: d.url, target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
 <Tag class:list={['slide', `slide--${d.variant}`]} {...linkProps}>
@@ -25,6 +28,7 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
         <div class="body">
           <h2 class="title title--big">{d.title}</h2>
           {d.summary && <p class="summary">{d.summary}</p>}
+          {d.stack && <p class="stack stack--dark">{d.stack}</p>}
         </div>
       </>
     ) : d.variant === 'compact' ? (
@@ -38,7 +42,7 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
           </>
         )}
         <h2 class="title title--overlay">{d.title}</h2>
-        <p class="year">{d.year}</p>
+        <p class="year">{d.stack ?? d.year}</p>
       </>
     ) : (
       <>
@@ -57,7 +61,7 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
             <h2 class="title">{d.title}</h2>
             <p class="stack">{d.stack ?? d.year}</p>
           </div>
-          <span class="arrow" aria-hidden="true">↗</span>
+          {d.url && <span class="arrow" aria-hidden="true">↗</span>}
         </div>
       </>
     )
@@ -120,6 +124,8 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
   }
   .foot__text { min-width: 0; }
   .slide--showcase .title { font-size: 26px; color: var(--ink); line-height: 1; }
+  .stack--dark { color: var(--cream); opacity: .55; margin-top: 12px; }
+
   .stack {
     margin: 6px 0 0;
     font-family: var(--font-mono);

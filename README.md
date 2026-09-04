@@ -112,6 +112,22 @@ Dua hal yang ikut terpengaruh kalau isinya diubah:
   disembunyikan di bawah 680px supaya tinggal 12%; keduanya masih tampil di kartu
   kontak.
 
+## Kebijakan tautan
+
+Tautan keluar — media sosial dan URL proyek — memakai `target="_blank"` beserta
+`rel="noopener noreferrer"`.
+
+Dua jenis tautan sengaja **tidak** diberi `target="_blank"`:
+
+- Anchor dalam halaman (`#karya`, `#tentang`, `#kontak`). Membuka tab baru akan
+  memuat ulang halaman yang sama alih-alih menggulir ke bagiannya.
+- `mailto:`. Di banyak browser ini meninggalkan tab kosong setelah aplikasi
+  surel terbuka.
+
+Panah ↗ pada kartu proyek hanya digambar kalau proyeknya punya `url`. Tanpa itu
+kartunya dirender sebagai `<article>`, bukan `<a>`, supaya tidak ada isyarat
+bisa diklik yang menyesatkan.
+
 ## Yang berbeda dari file desain
 
 Tiga hal sengaja tidak diport apa adanya:

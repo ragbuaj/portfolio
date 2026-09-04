@@ -7,4 +7,6 @@ order: 1
 draft: false
 ---
 
-GANTI KETERANGAN INI dengan satu kalimat tentang apa yang Anda kerjakan di sana.
+Mengembangkan seluruh proyek di portofolio ini, masing-masing dengan tech stack
+berbeda. Memimpin tim untuk BMIS dan Asset Management — mengatur pembagian
+tugas sekaligus menangani devops.
