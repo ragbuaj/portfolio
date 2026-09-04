@@ -6,7 +6,9 @@ const { cta, email } = site;
 <section id="kontak" class="cell cta" style="--span:8;--span-md:6">
   <div class="top">
     <h2 class="heading">{cta.heading}</h2>
-    <a class="mail" href={`mailto:${email}`}>{email}</a>
+    <a class="mail" href={`mailto:${email}`} data-copy-email={email}>
+      <span data-label aria-live="polite">{email}</span>
+    </a>
   </div>
 
   <div class="notes marquee">
@@ -26,6 +28,41 @@ const { cta, email } = site;
     </div>
   </div>
 </section>
+
+<script>
+  // Klik menyalin alamat, bukan menyerahkan ke handler mailto OS — di
+  // Windows itu memunculkan prompt "buka Outlook" yang mengagetkan.
+  //
+  // href mailto-nya sengaja dipertahankan: kalau skrip ini gagal dimuat atau
+  // clipboard ditolak, tautannya tetap berfungsi seperti biasa.
+  document.querySelectorAll<HTMLAnchorElement>('[data-copy-email]').forEach((link) => {
+    const label = link.querySelector<HTMLElement>('[data-label]');
+    const email = link.dataset.copyEmail;
+    if (!label || !email) return;
+
+    let restore: number | undefined;
+
+    link.addEventListener('click', async (event) => {
+      if (!navigator.clipboard) return; // biarkan mailto yang menangani
+
+      event.preventDefault();
+      try {
+        await navigator.clipboard.writeText(email);
+      } catch {
+        window.location.href = link.href; // penyalinan ditolak, kembali ke mailto
+        return;
+      }
+
+      label.textContent = 'Alamat tersalin';
+      link.classList.add('is-copied');
+      window.clearTimeout(restore);
+      restore = window.setTimeout(() => {
+        label.textContent = email;
+        link.classList.remove('is-copied');
+      }, 2000);
+    });
+  });
+</script>
 
 <style>
   .cta {
@@ -81,6 +118,10 @@ const { cta, email } = site;
     color: var(--cream);
     transform: translate(-3px,-3px);
     box-shadow: 9px 9px 0 var(--accent);
+  }
+  .mail.is-copied {
+    background: var(--accent);
+    color: var(--ink);
   }
 
   .notes {
