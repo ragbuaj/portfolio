@@ -41,11 +41,13 @@ const linkProps = d.url
             <span class="slot-label">{d.coverLabel}</span>
           </>
         )}
+        {d.badge && <span class="tag">{d.badge}</span>}
         <h2 class="title title--overlay">{d.title}</h2>
         <p class="year">{d.stack ?? d.year}</p>
       </>
     ) : (
       <>
+        {d.badge && <span class="tag">{d.badge}</span>}
         <div class="frame">
           {d.cover ? (
             <Image class="cover" src={d.cover} alt={d.coverAlt} widths={[500, 1000]} />
@@ -220,6 +222,23 @@ const linkProps = d.url
     letter-spacing: .1em;
     color: var(--ink);
     opacity: .6;
+  }
+
+  /* Penanda di kartu terang. Kartu gelap sudah punya slotnya sendiri
+     di baris .meta. */
+  .tag {
+    position: absolute;
+    top: 12px; right: 12px;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--cream);
+    border: var(--line);
+    border-radius: 999px;
+    padding: 4px 10px;
   }
 
   .cover {

@@ -151,6 +151,28 @@ a:hover { color: var(--accent2); }
 .marquee__track { display: flex; width: max-content; }
 .marquee__track > * { flex: none; }
 
+/* ---------- Animasi masuk saat digulir ---------- */
+
+/* Kelas .reveal dipasang oleh skrip, dan hanya pada sel yang belum terlihat.
+   Dua alasan: kalau skripnya gagal dimuat, tidak ada konten yang tersembunyi
+   permanen; dan sel yang sudah tampak di layar awal tidak berkedip.
+
+   Yang digeser adalah properti `translate`, bukan `transform`. Beberapa kartu
+   memakai `transform` untuk efek angkat saat hover — kalau dipakai keduanya,
+   nilai akhir animasi ini akan menimpa hover-nya. */
+.reveal {
+  opacity: 0;
+  translate: 0 22px;
+  transition:
+    opacity .55s cubic-bezier(.2, .8, .2, 1),
+    translate .55s cubic-bezier(.2, .8, .2, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  translate: none;
+}
+
 /* ---------- Hormati preferensi gerak ---------- */
 
 /* Desain aslinya menjalankan 7 animasi infinite sekaligus (ticker, spin,
@@ -167,4 +189,5 @@ a:hover { color: var(--accent2); }
   .wipe { -webkit-mask-image: none !important; mask-image: none !important; }
   .marquee__track { animation: none !important; transform: none !important; }
   .marquee { overflow-x: auto; }
+  .reveal { opacity: 1 !important; translate: none !important; }
 }

@@ -46,6 +46,44 @@ const experience = (await getCollection('experience', ({ data }) => !data.draft)
   </div>
 </BaseLayout>
 
+<script>
+  // Sel bento muncul sambil naik begitu masuk layar.
+  //
+  // Kelas .reveal dipasang dari sini, bukan dari markup: kalau skrip ini
+  // gagal dimuat, halaman tetap tampil utuh alih-alih kosong. Sel yang sudah
+  // terlihat saat halaman dibuka sengaja dilewati supaya tidak berkedip.
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (!reduced.matches) {
+    const cells = Array.from(
+      document.querySelectorAll<HTMLElement>('.bento > .cell'),
+    ).filter((cell) => cell.getBoundingClientRect().top > window.innerHeight);
+
+    if (cells.length > 0 && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          let staggered = 0;
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const cell = entry.target as HTMLElement;
+            // Sel yang masuk layar berbarengan dimunculkan berurutan,
+            // bukan serentak.
+            cell.style.transitionDelay = `${staggered++ * 70}ms`;
+            cell.classList.add('is-visible');
+            observer.unobserve(cell);
+          }
+        },
+        { rootMargin: '0px 0px -12% 0px' },
+      );
+
+      for (const cell of cells) {
+        cell.classList.add('reveal');
+        observer.observe(cell);
+      }
+    }
+  }
+</script>
+
 <style>
   .page {
     min-height: 100vh;

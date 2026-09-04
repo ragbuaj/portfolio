@@ -1,6 +1,7 @@
 ---
 title: Project Management
 stack: Nuxt + Go + Postgres
+badge: Internal
 year: 2024
 coverLabel: screenshot — 16:10
 coverAlt: ''

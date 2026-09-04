@@ -7,6 +7,6 @@ order: 1
 draft: false
 ---
 
-Mengembangkan seluruh proyek di portofolio ini, masing-masing dengan tech stack
-berbeda. Memimpin tim untuk BMIS dan Asset Management — mengatur pembagian
-tugas sekaligus menangani devops.
+Mengembangkan BMIS, Asset Management, dan Project Management — masing-masing
+dengan tech stack berbeda. Memimpin tim untuk BMIS dan Asset Management:
+mengatur pembagian tugas sekaligus menangani devops.
