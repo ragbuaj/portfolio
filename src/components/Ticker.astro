@@ -1,0 +1,54 @@
+---
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<div class="cell ticker marquee" style="--span:12;--span-md:6">
+  <div class="marquee__track">
+    {
+      [0, 1].map((copy) => (
+        <div class="run" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {items.map((item) => (
+            <>
+              <span>{item}</span>
+              <span class="sep" aria-hidden="true">✱</span>
+            </>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ticker {
+    background: var(--accent2);
+    border: var(--line);
+    border-radius: var(--r-sm);
+    padding: 10px 0;
+    animation: hueShift 12s ease-in-out infinite;
+  }
+
+  .marquee__track { animation: marquee var(--ticker) linear infinite; }
+
+  .run {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding-right: 28px;
+    font-family: var(--font-display);
+    font-size: 34px;
+    text-transform: uppercase;
+    color: var(--cream);
+    letter-spacing: .01em;
+    white-space: nowrap;
+  }
+
+  .sep { color: var(--ink); }
+
+  @media (max-width: 680px) {
+    .run { font-size: 24px; gap: 18px; padding-right: 18px; }
+  }
+</style>

@@ -1,0 +1,159 @@
+/* Token dan primitif dari desain "Portfolio Maximalist Bento".
+   Nilai warna & tipografi diambil apa adanya dari file desain. */
+
+:root {
+  --ink: #0d0c0a;
+  --cream: #f3eee2;
+  --paper: #e7dfcd;
+
+  /* Diisi ulang saat runtime dari site.json (lihat BaseLayout). */
+  --accent: oklch(0.86 0.19 120);
+  --accent2: oklch(0.7 0.19 8);
+  --accent3: oklch(0.72 0.17 250);
+
+  --ticker: 22s;
+
+  --r-lg: 26px;
+  --r-md: 22px;
+  --r-sm: 18px;
+  --line: 2px solid var(--ink);
+
+  --font-display: 'Anton', Impact, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; background: var(--ink); }
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent2); }
+
+/* Fokus keyboard. Desain tidak mendefinisikan ini sama sekali, padahal
+   seluruh navigasi dan kartu karya berupa <a>. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes brushWipe {
+  from { -webkit-mask-position: 118% 0; mask-position: 118% 0; }
+  to   { -webkit-mask-position: 0% 0;   mask-position: 0% 0; }
+}
+@keyframes strokeGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes marquee    { from { transform: translate3d(0,0,0); } to { transform: translate3d(-50%,0,0); } }
+@keyframes marqueeRev { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+@keyframes marqueeUp  { from { transform: translate3d(0,0,0); } to { transform: translate3d(0,-50%,0); } }
+@keyframes spin       { to { transform: rotate(360deg); } }
+@keyframes floaty     { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
+@keyframes blink      { 0%,45% { opacity: 1; } 50%,95% { opacity: .15; } 100% { opacity: 1; } }
+@keyframes riseIn     { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes hueShift   { 0%,100% { filter: hue-rotate(0deg); } 50% { filter: hue-rotate(28deg); } }
+
+/* ---------- Grid bento ---------- */
+
+.bento {
+  max-width: 1500px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px;
+  align-content: start;
+}
+
+/* Tiap sel membawa --span (12 kolom) dan --span-md (6 kolom). */
+.cell { grid-column: span var(--span, 4); min-width: 0; }
+
+@media (max-width: 1100px) {
+  .bento { grid-template-columns: repeat(6, 1fr); }
+  .cell { grid-column: span var(--span-md, 6); }
+}
+
+@media (max-width: 680px) {
+  .bento { grid-template-columns: 1fr; gap: 10px; }
+  .cell { grid-column: 1 / -1; }
+}
+
+/* ---------- Kartu ---------- */
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border: var(--line);
+  border-radius: var(--r-md);
+  background: var(--cream);
+}
+
+.card--lift {
+  transition:
+    transform .28s cubic-bezier(.2,.8,.2,1),
+    box-shadow .28s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Tekstur arsiran untuk slot gambar yang belum diisi. */
+.hatch { position: absolute; inset: 0; pointer-events: none; }
+.hatch--45  { background: repeating-linear-gradient(45deg,  color-mix(in oklab, var(--ink) 14%, transparent) 0 7px, transparent 7px 15px); }
+.hatch--135 { background: repeating-linear-gradient(135deg, color-mix(in oklab, var(--ink) 16%, transparent) 0 7px, transparent 7px 15px); }
+.hatch--neg { background: repeating-linear-gradient(-45deg, color-mix(in oklab, var(--ink) 14%, transparent) 0 7px, transparent 7px 15px); }
+
+.slot-label {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--cream);
+  border: var(--line);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* ---------- Marquee ---------- */
+
+.marquee { overflow: hidden; }
+.marquee__track { display: flex; width: max-content; }
+.marquee__track > * { flex: none; }
+
+/* ---------- Hormati preferensi gerak ---------- */
+
+/* Desain aslinya menjalankan 7 animasi infinite sekaligus (ticker, spin,
+   floaty, blink, hueShift). Tanpa blok ini situs jadi tidak nyaman bagi
+   pengguna dengan gangguan vestibular, dan boros baterai. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Mask animasi masuk dilepas supaya teks dijamin tampil penuh. */
+  .wipe { -webkit-mask-image: none !important; mask-image: none !important; }
+  .marquee__track { animation: none !important; transform: none !important; }
+  .marquee { overflow-x: auto; }
+}

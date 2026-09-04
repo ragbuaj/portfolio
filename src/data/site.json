@@ -1,12 +1,71 @@
 {
-  "name": "Nama Anda",
-  "role": "Frontend Engineer",
-  "tagline": "Satu kalimat tentang apa yang Anda kerjakan.",
-  "email": "halo@example.com",
-  "location": "Jakarta, Indonesia",
-  "about": "Paragraf perkenalan singkat. Diedit lewat /admin, bukan lewat kode.",
+  "name": "Rangga Prawira",
+  "initial": "R",
+  "role": "Full Stack Developer",
+  "location": "Yogyakarta, ID",
+  "email": "halo@ranggaprawira.id",
+  "theme": {
+    "accent": "oklch(0.86 0.19 120)",
+    "accent2": "oklch(0.70 0.19 8)",
+    "accent3": "oklch(0.72 0.17 250)",
+    "tickerSpeed": 22
+  },
+  "hero": {
+    "eyebrowLeft": "Portofolio 2019 — 2026",
+    "eyebrowRight": "Yogyakarta, ID",
+    "headline": [
+      { "text": "Kode yang", "style": "plain" },
+      { "text": "Berani", "style": "highlight" },
+      { "text": "Bicara", "style": "outline" }
+    ],
+    "intro": "Saya membangun produk web dari database sampai piksel terakhir — API yang rapi, antarmuka yang ramai tapi tetap cepat.",
+    "ctaLabel": "Lihat semua proyek"
+  },
+  "availability": {
+    "status": "Terbuka Q4",
+    "badge": "Available for work",
+    "portraitLabel": "foto portrait — 4:5"
+  },
+  "ticker": [
+    "TypeScript",
+    "Next.js",
+    "Node & Go",
+    "Postgres",
+    "Design System",
+    "DevOps"
+  ],
+  "stat": {
+    "label": "Jam terbang",
+    "value": "9",
+    "unit": "TH",
+    "description": "Startup, agensi, dan freelance — 40+ produk dikirim ke produksi."
+  },
+  "tools": [
+    "TypeScript",
+    "PostgreSQL",
+    "Next.js",
+    "Docker",
+    "Tailwind",
+    "Terraform"
+  ],
+  "cta": {
+    "heading": "Punya ide yang\nterlalu ramai?",
+    "notes": [
+      "Slot Januari 2027 · 2 tersisa",
+      "Balas dalam 24 jam",
+      "Proyek mulai 15 juta"
+    ]
+  },
   "socials": [
-    { "label": "GitHub", "url": "https://github.com/username" },
-    { "label": "LinkedIn", "url": "https://linkedin.com/in/username" }
-  ]
+    { "label": "Instagram", "metric": "18,4K", "url": "https://instagram.com/username", "accent": "accent" },
+    { "label": "GitHub", "metric": "1.4k ★", "url": "https://github.com/username", "accent": "accent2" }
+  ],
+  "nowPlaying": {
+    "label": "Sedang dengar",
+    "value": "Dangdut koplo remix"
+  },
+  "footer": {
+    "credit": "Dibuat sendiri — desain & kode",
+    "locale": "Yogyakarta"
+  }
 }

@@ -1,0 +1,27 @@
+---
+import { site } from '../lib/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="cell foot" style="--span:12;--span-md:6">
+  <span>© {year} {site.name}</span>
+  <span>{site.footer.credit}</span>
+  <span>{site.footer.locale}</span>
+</footer>
+
+<style>
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 6px 8px 2px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    opacity: .55;
+  }
+</style>

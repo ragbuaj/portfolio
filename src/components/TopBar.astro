@@ -1,0 +1,110 @@
+---
+import { site } from '../lib/site';
+---
+
+<header class="cell topbar" style="--span:12;--span-md:6">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">{site.initial}</span>
+    <p class="name">
+      {site.name}
+      <span class="role">/ {site.role}</span>
+    </p>
+  </div>
+
+  <nav class="nav" aria-label="Navigasi utama">
+    <a class="pill pill--accent" href="#karya">Karya</a>
+    <a class="pill pill--accent3" href="#tentang">Tentang</a>
+    <a class="pill pill--solid" href="#kontak">Ayo ngobrol</a>
+    <p class="status">
+      <span class="dot" aria-hidden="true"></span>
+      {site.availability.status}
+    </p>
+  </nav>
+</header>
+
+<style>
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    background: var(--cream);
+    border: var(--line);
+    border-radius: var(--r-sm);
+    padding: 12px 18px;
+    box-shadow: 6px 6px 0 var(--accent);
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; }
+
+  .mark {
+    width: 34px; height: 34px;
+    flex: none;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 20px;
+    display: grid;
+    place-items: center;
+  }
+
+  .name {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .role { opacity: .55; }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+  }
+
+  .pill {
+    color: var(--ink);
+    border: var(--line);
+    border-radius: 999px;
+    padding: 7px 14px;
+    transition:
+      transform .18s cubic-bezier(.2,.8,.2,1),
+      box-shadow .18s,
+      background .18s;
+  }
+  .pill:hover { transform: translate(-2px,-2px); box-shadow: 3px 3px 0 var(--ink); color: var(--ink); }
+  .pill--accent:hover  { background: var(--accent); }
+  .pill--accent3:hover { background: var(--accent3); }
+
+  .pill--solid { color: var(--cream); background: var(--ink); }
+  .pill--solid:hover { color: var(--cream); background: var(--ink); box-shadow: 3px 3px 0 var(--accent2); }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 0 6px;
+    color: var(--ink);
+  }
+
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 1.5px solid var(--ink);
+    animation: blink 1.6s steps(1,end) infinite;
+  }
+
+  @media (max-width: 680px) {
+    .topbar { flex-direction: column; align-items: flex-start; }
+  }
+</style>

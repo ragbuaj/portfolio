@@ -1,0 +1,54 @@
+---
+import { site } from '../lib/site';
+const { availability } = site;
+---
+
+<div class="cell portrait" style="--span:4;--span-md:2">
+  <div class="hatch hatch--135" aria-hidden="true"></div>
+  <p class="slot-label">{availability.portraitLabel}</p>
+  <p class="stamp">
+    <span set:html={availability.badge.replace(/\s+/, '<br>')} />
+  </p>
+</div>
+
+<style>
+  .portrait {
+    position: relative;
+    overflow: hidden;
+    border: var(--line);
+    border-radius: var(--r-lg);
+    background: var(--paper);
+    box-shadow: 10px 10px 0 var(--ink);
+    min-height: 340px;
+    display: grid;
+  }
+
+  /* Keduanya ditumpuk di sel yang sama. Di file desain aslinya mereka jadi
+     dua baris implisit sehingga label & badge menumpuk di tengah — padahal
+     align-self end/start jelas bermaksud pojok kiri-bawah dan kanan-atas. */
+  .slot-label, .stamp { grid-area: 1 / 1; }
+
+  .slot-label { align-self: end; justify-self: start; margin: 16px; }
+
+  .stamp {
+    position: relative;
+    justify-self: end;
+    align-self: start;
+    margin: 14px;
+    width: 104px; height: 104px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: var(--line);
+    display: grid;
+    place-items: center;
+    animation: spin 14s linear infinite;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+</style>

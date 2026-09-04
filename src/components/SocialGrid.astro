@@ -1,0 +1,89 @@
+---
+import { site } from '../lib/site';
+const { socials, nowPlaying } = site;
+---
+
+<div class="cell socials" style="--span:4;--span-md:6">
+  {
+    socials.map((s) => (
+      <a
+        class:list={['tile', `tile--${s.accent}`]}
+        href={s.url}
+        rel="noopener noreferrer"
+      >
+        {s.label}
+        <span class="metric">{s.metric}</span>
+      </a>
+    ))
+  }
+
+  <p class="playing">
+    <span>{nowPlaying.label}</span>
+    <span class="track">
+      {nowPlaying.value}
+      <span class="dot" aria-hidden="true"></span>
+    </span>
+  </p>
+</div>
+
+<style>
+  .socials { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .tile {
+    background: var(--ink);
+    border: 2px solid var(--cream);
+    border-radius: var(--r-sm);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--cream);
+    transition: transform .22s cubic-bezier(.2,.8,.2,1), background .22s, color .22s;
+  }
+  .tile:hover { transform: translateY(-4px); color: var(--ink); }
+  .tile--accent:hover  { background: var(--accent); }
+  .tile--accent2:hover { background: var(--accent2); }
+  .tile--accent3:hover { background: var(--accent3); }
+
+  .metric {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 0;
+  }
+  .tile--accent  .metric { color: var(--accent); }
+  .tile--accent2 .metric { color: var(--accent2); }
+  .tile--accent3 .metric { color: var(--accent3); }
+  .tile:hover .metric { color: var(--ink); }
+
+  .playing {
+    grid-column: span 2;
+    margin: 0;
+    background: var(--accent);
+    border: var(--line);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .track { display: flex; align-items: center; gap: 8px; }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink);
+    animation: blink 1s steps(1,end) infinite;
+  }
+</style>

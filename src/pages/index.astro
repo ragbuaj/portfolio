@@ -1,32 +1,68 @@
 ---
-// PLACEHOLDER — halaman ini akan diganti seluruhnya oleh port desain
-// "Portfolio Maximalist Bento". Fungsinya sekarang hanya membuktikan bahwa
-// jalur data (site.json + content collections) benar-benar tersambung.
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../lib/site';
-import { getCollection } from 'astro:content';
 
-const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
+import TopBar from '../components/TopBar.astro';
+import Hero from '../components/Hero.astro';
+import Portrait from '../components/Portrait.astro';
+import Ticker from '../components/Ticker.astro';
+import StatCard from '../components/StatCard.astro';
+import WorkCard from '../components/WorkCard.astro';
+import ToolsColumn from '../components/ToolsColumn.astro';
+import Testimonial from '../components/Testimonial.astro';
+import CtaCard from '../components/CtaCard.astro';
+import SocialGrid from '../components/SocialGrid.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
+  a.data.order - b.data.order;
+
+const allProjects = (await getCollection('projects', ({ data }) => !data.draft)).sort(byOrder);
+const featured = allProjects.filter((p) => p.data.featured);
+
+const testimonials = (await getCollection('testimonials', ({ data }) => !data.draft)).sort(byOrder);
+const quote = testimonials[0];
+
+// Ritme desain aslinya: STAT · KARYA·1 · KARYA·2 · PERKAKAS · KUTIPAN · KARYA·3.
+// Dua kartu pertama mengisi baris pertama, sisanya menyusul setelah kutipan.
+const firstRow = featured.slice(0, 2);
+const rest = featured.slice(2);
 ---
 
 <BaseLayout>
-  <main>
-    <h1>{site.name}</h1>
-    <p>{site.role} · {site.location}</p>
-    <p>{site.about}</p>
+  <div class="page">
+    <div class="bento">
+      <TopBar />
+      <Hero projectCount={allProjects.length} />
+      <Portrait />
+      <Ticker items={site.ticker} />
 
-    <h2>Proyek ({projects.length})</h2>
-    <ul>
-      {
-        projects.map((project) => (
-          <li>
-            <strong>{project.data.title}</strong> ({project.data.year}) —{' '}
-            {project.data.summary}
-          </li>
-        ))
-      }
-    </ul>
-  </main>
+      <StatCard />
+      {firstRow.map((project, i) => <WorkCard project={project} anchor={i === 0} />)}
+
+      <ToolsColumn title="Perkakas" items={site.tools} />
+      {quote && <Testimonial entry={quote} />}
+      {rest.map((project) => <WorkCard project={project} />)}
+
+      <CtaCard />
+      <SocialGrid />
+      <SiteFooter />
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .page {
+    min-height: 100vh;
+    padding: 18px;
+    background:
+      radial-gradient(1200px 600px at 12% -10%, color-mix(in oklab, var(--accent3) 22%, transparent), transparent 70%),
+      radial-gradient(900px 500px at 95% 8%, color-mix(in oklab, var(--accent2) 18%, transparent), transparent 70%),
+      var(--ink);
+  }
+
+  @media (max-width: 680px) {
+    .page { padding: 10px; }
+  }
+</style>

@@ -1,10 +1,11 @@
 # Konfigurasi Decap CMS.
-# PENTING: field di sini harus sejalan dengan src/content.config.ts.
-# Kalau tidak, editor bisa menyimpan data yang membuat build gagal.
+# PENTING: field di sini harus sejalan dengan src/lib/site.ts dan
+# src/content.config.ts. Kalau tidak, editor bisa menyimpan data yang
+# membuat build gagal.
 
 backend:
   name: github
-  repo: USERNAME/REPO # ← ganti setelah repo dibuat di GitHub
+  repo: USERNAME/REPO # <- ganti setelah repo dibuat di GitHub
   branch: main
   # Butuh OAuth provider. Paling ringan: Cloudflare Worker / Netlify.
   # base_url: https://oauth-anda.example.com
@@ -21,21 +22,126 @@ collections:
     label: Pengaturan Situs
     files:
       - name: profile
-        label: Profil
+        label: Profil & Halaman Depan
         file: src/data/site.json
         fields:
           - { name: name, label: Nama, widget: string }
+          - { name: initial, label: Inisial Logo, widget: string }
           - { name: role, label: Peran, widget: string }
-          - { name: tagline, label: Tagline, widget: string }
-          - { name: email, label: Email, widget: string }
           - { name: location, label: Lokasi, widget: string }
-          - { name: about, label: Tentang, widget: text }
+          - { name: email, label: Email, widget: string }
+
+          - name: theme
+            label: Palet Warna
+            widget: object
+            fields:
+              - name: accent
+                label: Aksen 1
+                widget: select
+                options:
+                  - { label: Hijau limau, value: "oklch(0.86 0.19 120)" }
+                  - { label: Kuning, value: "oklch(0.86 0.19 95)" }
+                  - { label: Toska, value: "oklch(0.86 0.19 170)" }
+              - name: accent2
+                label: Aksen 2
+                widget: select
+                options:
+                  - { label: Merah karang, value: "oklch(0.70 0.19 8)" }
+                  - { label: Magenta, value: "oklch(0.70 0.19 330)" }
+                  - { label: Jingga, value: "oklch(0.70 0.19 30)" }
+              - name: accent3
+                label: Aksen 3
+                widget: select
+                options:
+                  - { label: Biru langit, value: "oklch(0.72 0.17 250)" }
+                  - { label: Biru sian, value: "oklch(0.72 0.17 220)" }
+                  - { label: Ungu, value: "oklch(0.72 0.17 280)" }
+              - name: tickerSpeed
+                label: Kecepatan Ticker (detik)
+                widget: number
+                value_type: int
+                min: 6
+                max: 45
+
+          - name: hero
+            label: Bagian Utama
+            widget: object
+            fields:
+              - { name: eyebrowLeft, label: Label Kiri, widget: string }
+              - { name: eyebrowRight, label: Label Kanan, widget: string }
+              - name: headline
+                label: Judul Besar
+                widget: list
+                max: 4
+                hint: Tiap item satu baris, maksimal 4 baris.
+                fields:
+                  - { name: text, label: Teks, widget: string }
+                  - name: style
+                    label: Gaya
+                    widget: select
+                    options:
+                      - { label: Polos, value: plain }
+                      - { label: Disorot stabilo, value: highlight }
+                      - { label: Garis luar, value: outline }
+              - { name: intro, label: Paragraf Pembuka, widget: text }
+              - { name: ctaLabel, label: Teks Tombol, widget: string }
+
+          - name: availability
+            label: Ketersediaan
+            widget: object
+            fields:
+              - { name: status, label: Status di Topbar, widget: string }
+              - { name: badge, label: Teks Badge Berputar, widget: string }
+              - { name: portraitLabel, label: Label Slot Foto, widget: string }
+
+          - { name: ticker, label: Ticker Teknologi, widget: list, min: 2 }
+
+          - name: stat
+            label: Kartu Statistik
+            widget: object
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: value, label: Angka, widget: string }
+              - { name: unit, label: Satuan, widget: string }
+              - { name: description, label: Keterangan, widget: text }
+
+          - { name: tools, label: Daftar Perkakas, widget: list, min: 2 }
+
+          - name: cta
+            label: Ajakan Kontak
+            widget: object
+            fields:
+              - name: heading
+                label: Judul
+                widget: text
+                hint: Tekan Enter untuk pindah baris.
+              - { name: notes, label: Catatan Berjalan, widget: list, min: 1 }
+
           - name: socials
             label: Media Sosial
             widget: list
             fields:
               - { name: label, label: Nama, widget: string }
+              - { name: metric, label: Angka, widget: string }
               - { name: url, label: URL, widget: string }
+              - name: accent
+                label: Warna Hover
+                widget: select
+                options: [accent, accent2, accent3]
+
+          - name: nowPlaying
+            label: Sedang Didengar
+            widget: object
+            fields:
+              - { name: label, label: Label, widget: string }
+              - { name: value, label: Judul Lagu, widget: string }
+
+          - name: footer
+            label: Footer
+            widget: object
+            fields:
+              - { name: credit, label: Kredit, widget: string }
+              - { name: locale, label: Kota, widget: string }
 
   - name: projects
     label: Proyek
@@ -46,20 +152,58 @@ collections:
     # src/content.config.ts tidak bisa me-resolve-nya dan build gagal.
     media_folder: images
     public_folder: ./images
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     extension: md
     format: frontmatter
     fields:
-      - { name: title, label: Judul, widget: string }
-      - { name: summary, label: Ringkasan, widget: text }
+      - name: title
+        label: Judul
+        widget: string
+        hint: Tekan Enter untuk pindah baris pada kartu gelap.
+      - { name: stack, label: Baris Teknologi, widget: string, required: false }
       - { name: year, label: Tahun, widget: number, value_type: int, min: 1990, max: 2100 }
-      - { name: role, label: Peran, widget: string, required: false }
-      - { name: tags, label: Tag, widget: list, default: [] }
+      - { name: summary, label: Ringkasan, widget: text, required: false }
+      - { name: kicker, label: Label Kiri-Atas, widget: string, required: false }
+      - { name: badge, label: Label Kanan-Atas, widget: string, required: false }
       - { name: cover, label: Gambar Sampul, widget: image, required: false }
-      - { name: coverAlt, label: Teks Alt Sampul, widget: string, default: '', required: false }
+      - { name: coverAlt, label: Teks Alt Sampul, widget: string, default: "", required: false }
+      - name: coverLabel
+        label: Teks Placeholder Gambar
+        widget: string
+        default: "screenshot - 16:10"
+      - name: variant
+        label: Bentuk Kartu
+        widget: select
+        default: showcase
+        options:
+          - { label: Gambar di atas judul di bawah (terang), value: showcase }
+          - { label: Kartu gelap teks besar tanpa gambar, value: feature }
+          - { label: Gambar penuh judul menimpa, value: compact }
+      - name: span
+        label: Lebar Kolom
+        widget: number
+        value_type: int
+        default: 4
+        min: 3
+        max: 12
+        hint: Grid 12 kolom. Usahakan tiap baris berjumlah 12 (desain aslinya 3+5+4).
       - { name: url, label: URL Live, widget: string, required: false }
       - { name: repo, label: URL Repo, widget: string, required: false }
       - { name: order, label: Urutan, widget: number, value_type: int, default: 999 }
-      - { name: featured, label: Unggulan, widget: boolean, default: false }
+      - { name: featured, label: Tampil di Halaman Depan, widget: boolean, default: false }
       - { name: draft, label: Draf, widget: boolean, default: false }
       - { name: body, label: Isi, widget: markdown, required: false }
+
+  - name: testimonials
+    label: Testimoni
+    folder: src/content/testimonials
+    create: true
+    slug: "{{slug}}"
+    extension: md
+    format: frontmatter
+    fields:
+      - { name: author, label: Nama, widget: string }
+      - { name: role, label: Jabatan & Perusahaan, widget: string }
+      - { name: order, label: Urutan, widget: number, value_type: int, default: 999 }
+      - { name: draft, label: Draf, widget: boolean, default: false }
+      - { name: body, label: Kutipan, widget: markdown }
