@@ -1,0 +1,93 @@
+name: Deploy
+
+# Repo ini publik, jadi tidak ada satu pun detail server yang ditulis di sini.
+# Alamat, user, path, dan kunci semuanya datang dari GitHub Secrets.
+# Lihat bagian "Deploy" di README untuk daftar secret yang harus diisi.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Deploy yang tumpang tindih bisa menyalin dua build berbeda ke folder yang
+# sama secara bersamaan. Satu jalan pada satu waktu, dan yang lama dibatalkan.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Pasang dependency
+        run: npm ci
+
+      # Gerbang mutu dijalankan sebelum apa pun dikirim. Kalau salah satu
+      # gagal, server tidak disentuh sama sekali.
+      - name: Type check
+        run: npm run check
+
+      - name: Cek konsistensi CMS
+        run: npm run verify:cms
+
+      - name: Build
+        run: npm run build
+
+      - name: Siapkan kunci SSH
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+
+          if [ -n "${SSH_KNOWN_HOSTS:-}" ]; then
+            # Kunci host dipatok — aman dari penyadapan di tengah jalan.
+            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            # Cadangan: percaya kunci yang ditemui saat ini. Berfungsi, tapi
+            # tidak melindungi dari server palsu. Isi SSH_KNOWN_HOSTS untuk
+            # menutup celah itu.
+            ssh-keyscan -p "${SSH_PORT:-22}" -H "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Kirim ke server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -euo pipefail
+          # PERINGATAN: --delete menghapus berkas di DEPLOY_PATH yang tidak ada
+          # di dist/. Itu memang yang diinginkan supaya aset lama tidak menumpuk,
+          # TAPI berarti DEPLOY_PATH harus folder khusus situs ini. Jangan
+          # arahkan ke folder yang berisi hal lain.
+          rsync -az --delete --checksum \
+            -e "ssh -i ~/.ssh/id_deploy -p ${SSH_PORT:-22} -o StrictHostKeyChecking=yes" \
+            dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: Pastikan situs benar-benar hidup
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          set -euo pipefail
+          url="${SITE_URL:-https://ragilbuaj.web.id}"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --retry 3 --retry-delay 3 "$url")
+          echo "$url -> HTTP $code"
+          [ "$code" = "200" ]

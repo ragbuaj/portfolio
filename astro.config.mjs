@@ -3,8 +3,9 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  // Ganti ke domain final sebelum deploy — dipakai untuk sitemap & canonical URL.
-  site: 'https://example.com',
+  // Dipakai untuk canonical URL dan tag Open Graph. Harus cocok dengan domain
+  // yang benar-benar melayani situsnya.
+  site: 'https://ragilbuaj.web.id',
   output: 'static',
   image: {
     // Decap menulis gambar ke public/uploads, jadi biarkan lewat tanpa diproses.

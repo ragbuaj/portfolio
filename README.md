@@ -54,6 +54,43 @@ Lalu jalankan `npm run dev` di terminal lain dan buka http://localhost:4321/admi
 3. Siapkan GitHub OAuth provider, isi `base_url`-nya di config yang sama.
 4. Ganti `site:` di `astro.config.mjs` ke domain final.
 
+## Deploy
+
+Push ke `main` memicu `.github/workflows/deploy.yml`: build, jalankan gerbang
+mutu, lalu kirim `dist/` ke VPS lewat rsync over SSH, dan terakhir cek situsnya
+benar-benar membalas HTTP 200.
+
+Repo ini publik, jadi **tidak ada satu pun detail server di dalamnya**. Semuanya
+diisi lewat Settings → Secrets and variables → Actions:
+
+| Secret | Isi | Wajib |
+|---|---|---|
+| `SSH_HOST` | Alamat VPS | ya |
+| `SSH_USER` | Username SSH | ya |
+| `SSH_KEY` | Private key, isi berkasnya utuh termasuk baris `BEGIN`/`END` | ya |
+| `DEPLOY_PATH` | Folder docroot di server, mis. `/var/www/portfolio` | ya |
+| `SSH_PORT` | Kalau bukan 22 | tidak |
+| `SSH_KNOWN_HOSTS` | Kunci host, untuk mematok koneksi | tidak |
+| `SITE_URL` | Kalau berbeda dari `site` di `astro.config.mjs` | tidak |
+
+Ambil `SSH_KNOWN_HOSTS` dari mesin yang sudah pernah terhubung:
+
+```bash
+ssh-keygen -F ALAMAT_VPS
+```
+
+Tanpa secret itu, workflow memakai `ssh-keyscan` dan mempercayai kunci apa pun
+yang ditemuinya saat itu — berfungsi, tapi tidak melindungi dari server palsu.
+
+**`DEPLOY_PATH` harus folder khusus situs ini.** rsync dijalankan dengan
+`--delete` supaya aset lama tidak menumpuk, artinya berkas apa pun di folder itu
+yang tidak ada di `dist/` akan dihapus.
+
+Contoh konfigurasi Nginx ada di `deploy/nginx.conf.example`, lengkap dengan
+aturan cache: berkas di `/_astro/` boleh di-cache setahun karena namanya
+ber-hash, sedangkan HTML tidak boleh — kalau ikut di-cache lama, pengunjung akan
+terus melihat versi usang setelah konten diperbarui lewat `/admin`.
+
 ## Layout bento
 
 Grid 12 kolom, di-tile manual seperti desain aslinya:

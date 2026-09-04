@@ -1,0 +1,82 @@
+# Contoh server block Nginx untuk situs statis ini.
+#
+# Salin ke /etc/nginx/sites-available/ragilbuaj.web.id, sesuaikan `root`,
+# lalu aktifkan dengan symlink ke sites-enabled dan `nginx -t && systemctl reload nginx`.
+#
+# Sertifikatnya diasumsikan dari certbot:
+#   certbot --nginx -d ragilbuaj.web.id -d www.ragilbuaj.web.id
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ragilbuaj.web.id www.ragilbuaj.web.id;
+
+    # Biarkan certbot memperbarui sertifikat tanpa terkena redirect.
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+
+    location / {
+        return 301 https://ragilbuaj.web.id$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;                       # Nginx >= 1.25. Versi lama: `listen 443 ssl http2;`
+    server_name www.ragilbuaj.web.id;
+
+    ssl_certificate     /etc/letsencrypt/live/ragilbuaj.web.id/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ragilbuaj.web.id/privkey.pem;
+
+    return 301 https://ragilbuaj.web.id$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name ragilbuaj.web.id;
+
+    ssl_certificate     /etc/letsencrypt/live/ragilbuaj.web.id/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ragilbuaj.web.id/privkey.pem;
+
+    # Harus sama dengan secret DEPLOY_PATH di GitHub Actions.
+    root /var/www/portfolio;
+    index index.html;
+
+    # Nama berkas CSS mengandung hash isinya, jadi berubah sendiri tiap kali
+    # isinya berubah. Aman di-cache lama.
+    location /_astro/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # HTML tidak ber-hash. Kalau ini ikut di-cache lama, pengunjung lama akan
+    # terus melihat versi usang setelah konten diperbarui lewat /admin.
+    location = / {
+        add_header Cache-Control "no-cache";
+    }
+    location ~* \.html$ {
+        add_header Cache-Control "no-cache";
+    }
+
+    location / {
+        try_files $uri $uri/ $uri.html =404;
+    }
+
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 256;
+    gzip_types
+        text/plain
+        text/css
+        application/javascript
+        image/svg+xml
+        application/json;
+
+    # Situs ini tidak memuat skrip pihak ketiga, hanya font Google.
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+}
