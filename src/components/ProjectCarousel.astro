@@ -20,9 +20,9 @@ const { projects } = Astro.props;
   <!-- tabindex supaya area geser ini bisa dijangkau dan digulir dari keyboard. -->
   <div class="track" data-track tabindex="0" role="region" aria-label="Daftar proyek">
     {
-      projects.map((project) => (
+      projects.map((project, i) => (
         <div class="wrap">
-          <WorkCard project={project} />
+          <WorkCard project={project} index={i + 1} />
         </div>
       ))
     }
@@ -143,7 +143,7 @@ const { projects } = Astro.props;
   }
 
   @media (max-width: 680px) {
-    .wrap { flex-basis: 82%; height: 270px; }
+    .wrap { flex-basis: 82%; height: 300px; }
   }
 
   @media (prefers-reduced-motion: reduce) {

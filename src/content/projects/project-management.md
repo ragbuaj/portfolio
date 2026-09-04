@@ -3,9 +3,9 @@ title: Project Management
 stack: Nuxt + Go + Postgres
 badge: Internal
 year: 2024
-coverLabel: screenshot — 16:10
+summary: Manajemen proyek — penjadwalan dan pendataan barang serta bahan baku.
 coverAlt: ''
-variant: compact
+tone: accent2
 order: 3
 featured: true
 draft: false

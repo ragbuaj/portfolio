@@ -162,23 +162,19 @@ collections:
       - { name: stack, label: Baris Teknologi, widget: string, required: false }
       - { name: year, label: Tahun, widget: number, value_type: int, min: 1990, max: 2100 }
       - { name: summary, label: Ringkasan, widget: text, required: false }
-      - { name: kicker, label: Label Kiri-Atas, widget: string, required: false }
-      - { name: badge, label: Label Kanan-Atas, widget: string, required: false }
+      - { name: badge, label: Label Pojok, widget: string, required: false }
       - { name: cover, label: Gambar Sampul, widget: image, required: false }
       - { name: coverAlt, label: Teks Alt Sampul, widget: string, default: "", required: false }
-      - name: coverLabel
-        label: Teks Placeholder Gambar
-        widget: string
-        default: "screenshot - 16:10"
-      - name: variant
-        label: Tampilan Kartu
+      - name: tone
+        label: Warna Kartu
         widget: select
-        default: showcase
-        hint: Semua kartu berukuran sama di carousel; ini hanya mengubah warnanya.
+        default: ink
+        hint: Hanya berlaku kalau proyeknya belum punya Gambar Sampul. Begitu gambarnya diisi, kartunya otomatis jadi kartu bergambar.
         options:
-          - { label: Gambar di atas judul di bawah (terang), value: showcase }
-          - { label: Kartu gelap teks besar tanpa gambar, value: feature }
-          - { label: Gambar penuh judul menimpa, value: compact }
+          - { label: Gelap, value: ink }
+          - { label: Hijau limau, value: accent }
+          - { label: Merah karang, value: accent2 }
+          - { label: Biru langit, value: accent3 }
       - { name: url, label: URL Live, widget: string, required: false }
       - { name: repo, label: URL Repo, widget: string, required: false }
       - name: order

@@ -2,7 +2,7 @@
 role: Fullstack Developer
 company: PT. Nusa Tekno Global
 start: '2024'
-end: '2026'
+end: ''
 order: 1
 draft: false
 ---

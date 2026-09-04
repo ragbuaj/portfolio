@@ -3,9 +3,9 @@ title: BMIS
 stack: Vue + Yii2 + Go + Postgres
 badge: Internal
 year: 2025
-coverLabel: screenshot dashboard — 16:10
+summary: Sistem informasi gedung — preventive maintenance, komplain, work request, serta supply & tools.
 coverAlt: ''
-variant: showcase
+tone: accent3
 order: 2
 featured: true
 draft: false

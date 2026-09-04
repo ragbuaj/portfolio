@@ -4,10 +4,9 @@ title: |-
   Management
 stack: Vue + Yii2 + Go + Postgres
 year: 2026
-kicker: Studi kasus 02
 badge: Internal
 summary: Manajemen fixed asset — tracking, stock opname, dan penilaian aset.
-variant: feature
+tone: ink
 order: 1
 featured: true
 draft: false

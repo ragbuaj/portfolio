@@ -17,22 +17,21 @@ const projects = defineCollection({
       year: z.number().int().min(1990).max(2100),
       summary: z.string().optional(),
 
-      /** Label kiri-atas kartu gelap, mis. "Studi kasus 02". */
-      kicker: z.string().optional(),
-      /** Label kanan-atas kartu gelap, mis. "Internal". */
+      /** Label kecil di pojok kartu, mis. "Internal". */
       badge: z.string().optional(),
 
       cover: image().optional(),
       coverAlt: z.string().default(''),
-      /** Teks di kotak placeholder saat `cover` belum diisi. */
-      coverLabel: z.string().default('screenshot — 16:10'),
 
       /**
-       * Tampilan kartu di dalam carousel. Semua kartu berukuran sama;
-       * varian hanya mengubah warna dan susunan isinya supaya deretannya
-       * tidak monoton.
+       * Warna kartu saat proyeknya belum punya gambar sampul. Susunan isinya
+       * ditentukan oleh ada-tidaknya `cover`, bukan oleh field ini.
+       *
+       * Teks mengikuti warna latar demi keterbacaan: latar gelap memakai teks
+       * krem (rasio 16,9:1), latar berwarna memakai teks tinta (6,7-13,2:1).
+       * Teks krem di atas latar berwarna hanya 2,2-2,5:1 dan tidak dipakai.
        */
-      variant: z.enum(['showcase', 'feature', 'compact']).default('showcase'),
+      tone: z.enum(['ink', 'accent', 'accent2', 'accent3']).default('ink'),
 
       url: z.url().optional(),
       repo: z.url().optional(),

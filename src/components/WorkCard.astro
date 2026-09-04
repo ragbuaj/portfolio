@@ -4,59 +4,34 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   project: CollectionEntry<'projects'>;
+  /** Nomor urut di carousel, dipakai sebagai angka besar dekoratif. */
+  index: number;
 }
 
-const { project } = Astro.props;
+const { project, index } = Astro.props;
 const d = project.data;
 
-const Tag = d.url ? 'a' : 'article';
+// Susunan kartu ditentukan ada-tidaknya gambar, bukan oleh field terpisah.
+// Tanpa gambar, kartu jadi kartu teks — bukan kotak berarsir yang kosong.
+const punyaGambar = Boolean(d.cover);
+
 // Link keluar dibuka di tab baru supaya pengunjung tidak meninggalkan situs.
+const Tag = d.url ? 'a' : 'article';
 const linkProps = d.url
   ? { href: d.url, target: '_blank', rel: 'noopener noreferrer' }
   : {};
 ---
 
-<Tag class:list={['slide', `slide--${d.variant}`]} {...linkProps}>
+<Tag
+  class:list={['slide', punyaGambar ? 'slide--gambar' : 'slide--teks', `tone-${d.tone}`]}
+  {...linkProps}
+>
   {
-    d.variant === 'feature' ? (
-      <>
-        <span class="blob" aria-hidden="true" />
-        <p class="meta">
-          <span>{d.kicker}</span>
-          <span>{d.badge}</span>
-        </p>
-        <div class="body">
-          <h2 class="title title--big">{d.title}</h2>
-          {d.summary && <p class="summary">{d.summary}</p>}
-          {d.stack && <p class="stack stack--dark">{d.stack}</p>}
-        </div>
-      </>
-    ) : d.variant === 'compact' ? (
-      <>
-        {d.cover ? (
-          <Image class="cover" src={d.cover} alt={d.coverAlt} widths={[400, 800]} />
-        ) : (
-          <>
-            <span class="hatch hatch--neg" aria-hidden="true" />
-            <span class="slot-label">{d.coverLabel}</span>
-          </>
-        )}
-        {d.badge && <span class="tag">{d.badge}</span>}
-        <h2 class="title title--overlay">{d.title}</h2>
-        <p class="year">{d.stack ?? d.year}</p>
-      </>
-    ) : (
+    punyaGambar ? (
       <>
         {d.badge && <span class="tag">{d.badge}</span>}
         <div class="frame">
-          {d.cover ? (
-            <Image class="cover" src={d.cover} alt={d.coverAlt} widths={[500, 1000]} />
-          ) : (
-            <>
-              <span class="hatch hatch--45" aria-hidden="true" />
-              <span class="slot-label">{d.coverLabel}</span>
-            </>
-          )}
+          <Image class="cover" src={d.cover!} alt={d.coverAlt} widths={[500, 1000]} />
         </div>
         <div class="foot">
           <div class="foot__text">
@@ -66,13 +41,26 @@ const linkProps = d.url
           {d.url && <span class="arrow" aria-hidden="true">↗</span>}
         </div>
       </>
+    ) : (
+      <>
+        <span class="kisi" aria-hidden="true" />
+        <span class="blob" aria-hidden="true" />
+        <span class="angka" aria-hidden="true">{String(index).padStart(2, '0')}</span>
+        <p class="meta">
+          <span>{d.year}</span>
+          <span>{d.badge}</span>
+        </p>
+        <div class="body">
+          <h2 class="title title--big">{d.title}</h2>
+          {d.summary && <p class="summary">{d.summary}</p>}
+          {d.stack && <p class="stack stack--teks">{d.stack}</p>}
+        </div>
+      </>
     )
   }
 </Tag>
 
 <style>
-  /* Semua slide berukuran sama supaya deretannya rapi saat digeser.
-     Varian hanya mengubah warna dan susunan isinya. */
   .slide {
     position: relative;
     overflow: hidden;
@@ -95,15 +83,144 @@ const linkProps = d.url
     white-space: pre-line;
   }
 
-  /* ---- showcase ---- */
-  .slide--showcase {
+  /* ---------- Warna ----------
+
+     Teks selalu mengikuti latar: latar gelap dapat teks krem, latar berwarna
+     dapat teks tinta. Kebalikannya hanya menghasilkan rasio 2,2-2,5:1, jauh
+     di bawah ambang keterbacaan. Yang dipakai di sini 6,7:1 sampai 16,9:1. */
+  .tone-ink {
+    --kartu-bg: var(--ink);
+    --kartu-fg: var(--cream);
+    --kartu-tepi: var(--cream);
+    --kartu-bayang: var(--accent);
+  }
+  .tone-accent {
+    --kartu-bg: var(--accent);
+    --kartu-fg: var(--ink);
+    --kartu-tepi: var(--ink);
+    --kartu-bayang: var(--ink);
+  }
+  .tone-accent2 {
+    --kartu-bg: var(--accent2);
+    --kartu-fg: var(--ink);
+    --kartu-tepi: var(--ink);
+    --kartu-bayang: var(--ink);
+  }
+  .tone-accent3 {
+    --kartu-bg: var(--accent3);
+    --kartu-fg: var(--ink);
+    --kartu-tepi: var(--ink);
+    --kartu-bayang: var(--ink);
+  }
+
+  /* ---------- Kartu teks (tanpa gambar) ---------- */
+  .slide--teks {
+    background: var(--kartu-bg);
+    border: 2px solid var(--kartu-tepi);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .slide--teks:hover {
+    transform: translate(-5px,-5px) rotate(.5deg);
+    box-shadow: 16px 16px 0 var(--kartu-bayang);
+  }
+
+  /* ---------- Dekorasi kartu teks ----------
+
+     Semuanya memakai warna teks kartu itu sendiri pada opacity rendah, jadi
+     ikut menyesuaikan tiap warna latar tanpa perlu diatur satu per satu.
+     Isi kartu diangkat ke z-index 1 supaya selalu berada di atasnya. */
+
+  /* Kisi halus melintasi seluruh kartu, mengutip latar kartu hero. Sengaja
+     ditahan di .05: ini satu-satunya dekorasi yang lewat di belakang teks. */
+  .kisi {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(0deg, var(--kartu-fg) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(90deg, var(--kartu-fg) 0 1px, transparent 1px 26px);
+    opacity: .05;
+  }
+
+  /* Angka besar bergaris luar, mengutip perlakuan kata "KIRIM" di hero.
+     Boleh tebal karena berada di luar kolom teks. */
+  .angka {
+    position: absolute;
+    right: -10px;
+    bottom: -40px;
+    font-family: var(--font-display);
+    font-size: 150px;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--kartu-fg);
+    opacity: .34;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Blob dipindah ke sisi kanan, menyatu dengan angka. Di sisi kiri ia jatuh
+     tepat di belakang ringkasan dan menurunkan kontrasnya ke 4,42:1. */
+  .blob {
+    position: absolute;
+    right: -55px; top: 40px;
+    width: 170px; height: 170px;
+    border-radius: 50%;
+    background: var(--kartu-fg);
+    opacity: .16;
+    animation: floaty 7s ease-in-out infinite;
+  }
+
+  .meta {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--kartu-fg);
+    /* Teks kecil di atas latar berwarna paling tipis marginnya. Pada .9,
+       yang terburuk (koral, di atas kisi) masih 5,53:1. */
+    opacity: .9;
+  }
+
+  .body {
+    position: relative;
+    z-index: 1;
+    /* Menjaga teks tetap di kiri, terpisah dari angka dan blob di kanan. */
+    max-width: 68%;
+  }
+  .title--big { font-size: 38px; line-height: .9; color: var(--kartu-fg); }
+
+  .summary {
+    margin: 12px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--kartu-fg);
+    opacity: .9;
+  }
+  .stack--teks {
+    margin: 12px 0 0;
+    color: var(--kartu-fg);
+    opacity: .9;
+  }
+
+  /* ---------- Kartu bergambar ---------- */
+  .slide--gambar {
     background: var(--cream);
     border: var(--line);
     box-shadow: 8px 8px 0 var(--accent3);
     display: grid;
     grid-template-rows: 1fr auto;
   }
-  .slide--showcase:hover {
+  .slide--gambar:hover {
     transform: translate(-5px,-5px) rotate(-.5deg);
     box-shadow: 16px 16px 0 var(--accent3);
   }
@@ -112,9 +229,14 @@ const linkProps = d.url
     position: relative;
     background: var(--paper);
     border-bottom: var(--line);
-    display: grid;
-    place-items: center;
     overflow: hidden;
+  }
+
+  .cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .foot {
@@ -125,18 +247,8 @@ const linkProps = d.url
     padding: 16px 18px;
   }
   .foot__text { min-width: 0; }
-  .slide--showcase .title { font-size: 26px; color: var(--ink); line-height: 1; }
-  .stack--dark { color: var(--cream); opacity: .55; margin-top: 12px; }
+  .slide--gambar .title { font-size: 26px; color: var(--ink); line-height: 1; }
 
-  .stack {
-    margin: 6px 0 0;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    opacity: .6;
-    color: var(--ink);
-  }
   .arrow {
     width: 44px; height: 44px;
     flex: none;
@@ -149,83 +261,17 @@ const linkProps = d.url
     color: var(--ink);
   }
 
-  /* ---- feature ---- */
-  .slide--feature {
-    background: var(--ink);
-    border: 2px solid var(--cream);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 16px;
-  }
-  .slide--feature:hover {
-    transform: translate(-5px,-5px) rotate(.5deg);
-    box-shadow: 16px 16px 0 var(--accent);
-  }
-  .blob {
-    position: absolute;
-    left: -60px; bottom: -90px;
-    width: 170px; height: 170px;
-    border-radius: 50%;
-    background: var(--accent);
-    opacity: .32;
-    animation: floaty 7s ease-in-out infinite;
-  }
-  .meta {
-    position: relative;
-    margin: 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--cream);
-    opacity: .7;
-  }
-  .body { position: relative; }
-  .title--big { font-size: 38px; line-height: .9; color: var(--cream); }
-  .summary {
-    margin: 12px 0 0;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--cream);
-    opacity: .72;
-  }
-
-  /* ---- compact ---- */
-  .slide--compact {
-    background: var(--paper);
-    border: var(--line);
-    display: grid;
-    place-items: center;
-  }
-  .slide--compact:hover {
-    transform: translate(-5px,-5px);
-    box-shadow: 14px 14px 0 var(--accent2);
-  }
-  .title--overlay {
-    position: absolute;
-    left: 14px; top: 14px;
-    right: 14px;
-    font-size: 20px;
-    color: var(--ink);
-  }
-  .year {
-    position: absolute;
-    left: 14px; bottom: 14px;
-    margin: 0;
+  .stack {
+    margin: 6px 0 0;
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: .1em;
-    color: var(--ink);
+    text-transform: uppercase;
     opacity: .6;
+    color: var(--ink);
   }
 
-  /* Penanda di kartu terang. Kartu gelap sudah punya slotnya sendiri
-     di baris .meta. */
+  /* Penanda di kartu bergambar. Kartu teks memakainya di baris .meta. */
   .tag {
     position: absolute;
     top: 12px; right: 12px;
@@ -241,14 +287,14 @@ const linkProps = d.url
     padding: 4px 10px;
   }
 
-  .cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
   @media (max-width: 680px) {
     .title--big { font-size: 32px; }
+
+    /* Kartu jauh lebih sempit di sini, jadi dekorasi harus mundur lebih jauh
+       ke luar tepi — kalau tidak, ia masuk ke belakang teks dan menurunkan
+       kontrasnya sampai di bawah ambang. */
+    .angka { font-size: 104px; right: -24px; bottom: -30px; }
+    .blob { right: -100px; top: 30px; width: 150px; height: 150px; }
+    .body { max-width: 76%; }
   }
 </style>
