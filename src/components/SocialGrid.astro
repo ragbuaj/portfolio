@@ -12,7 +12,7 @@ const { socials, nowPlaying } = site;
         rel="noopener noreferrer"
       >
         {s.label}
-        <span class="metric">{s.metric}</span>
+        {s.metric && <span class="metric">{s.metric}</span>}
       </a>
     ))
   }
@@ -50,10 +50,20 @@ const { socials, nowPlaying } = site;
   .tile--accent2:hover { background: var(--accent2); }
   .tile--accent3:hover { background: var(--accent3); }
 
+  /* Jumlah tautan ganjil: yang terakhir melebar penuh supaya barisnya
+     tidak menyisakan lubang. */
+  .tile:last-of-type:nth-of-type(odd) {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
   .metric {
     font-family: var(--font-display);
     font-size: 26px;
     letter-spacing: 0;
+    overflow-wrap: anywhere;
   }
   .tile--accent  .metric { color: var(--accent); }
   .tile--accent2 .metric { color: var(--accent2); }

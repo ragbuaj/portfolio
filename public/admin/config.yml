@@ -122,7 +122,7 @@ collections:
             widget: list
             fields:
               - { name: label, label: Nama, widget: string }
-              - { name: metric, label: Angka, widget: string }
+              - { name: metric, label: Angka / Handle, widget: string, required: false }
               - { name: url, label: URL, widget: string }
               - name: accent
                 label: Warna Hover
@@ -140,7 +140,6 @@ collections:
             label: Footer
             widget: object
             fields:
-              - { name: credit, label: Kredit, widget: string }
               - { name: locale, label: Kota, widget: string }
 
   - name: projects
@@ -172,21 +171,14 @@ collections:
         widget: string
         default: "screenshot - 16:10"
       - name: variant
-        label: Bentuk Kartu
+        label: Tampilan Kartu
         widget: select
         default: showcase
+        hint: Semua kartu berukuran sama di carousel; ini hanya mengubah warnanya.
         options:
           - { label: Gambar di atas judul di bawah (terang), value: showcase }
           - { label: Kartu gelap teks besar tanpa gambar, value: feature }
           - { label: Gambar penuh judul menimpa, value: compact }
-      - name: span
-        label: Lebar Kolom
-        widget: number
-        value_type: int
-        default: 4
-        min: 3
-        max: 12
-        hint: Grid 12 kolom. Usahakan tiap baris berjumlah 12 (desain aslinya 3+5+4).
       - { name: url, label: URL Live, widget: string, required: false }
       - { name: repo, label: URL Repo, widget: string, required: false }
       - { name: order, label: Urutan, widget: number, value_type: int, default: 999 }
@@ -194,16 +186,23 @@ collections:
       - { name: draft, label: Draf, widget: boolean, default: false }
       - { name: body, label: Isi, widget: markdown, required: false }
 
-  - name: testimonials
-    label: Testimoni
-    folder: src/content/testimonials
+  - name: experience
+    label: Riwayat Kerja
+    folder: src/content/experience
     create: true
     slug: "{{slug}}"
     extension: md
     format: frontmatter
     fields:
-      - { name: author, label: Nama, widget: string }
-      - { name: role, label: Jabatan & Perusahaan, widget: string }
+      - { name: role, label: Jabatan, widget: string }
+      - { name: company, label: Perusahaan, widget: string }
+      - { name: start, label: Mulai, widget: string }
+      - name: end
+        label: Selesai
+        widget: string
+        required: false
+        default: ""
+        hint: Kosongkan kalau masih berjalan - akan tampil sebagai "sekarang".
       - { name: order, label: Urutan, widget: number, value_type: int, default: 999 }
       - { name: draft, label: Draf, widget: boolean, default: false }
-      - { name: body, label: Kutipan, widget: markdown }
+      - { name: body, label: Keterangan, widget: markdown, required: false }

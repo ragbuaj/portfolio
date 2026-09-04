@@ -1,0 +1,119 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entries: CollectionEntry<'experience'>[];
+}
+const { entries } = Astro.props;
+
+const rendered = await Promise.all(
+  entries.map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+);
+---
+
+<section class="cell exp" style="--span:9;--span-md:4">
+  <h2 class="label">Riwayat kerja</h2>
+
+  <ol class="list">
+    {
+      rendered.map(({ entry, Content }) => (
+        <li class="item">
+          <p class="period">
+            {entry.data.start} — {entry.data.end || 'sekarang'}
+          </p>
+          <h3 class="role">{entry.data.role}</h3>
+          <p class="company">{entry.data.company}</p>
+          <div class="note">
+            <Content />
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .exp {
+    background: var(--accent);
+    border: var(--line);
+    border-radius: var(--r-md);
+    padding: 20px;
+    box-shadow: 8px 8px 0 var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: .75;
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    display: grid;
+    /* Jumlah entri bebas: satu kolom per entri selama masih muat. */
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 18px;
+  }
+
+  .item {
+    border-left: var(--line);
+    padding-left: 14px;
+    min-width: 0;
+  }
+
+  .period {
+    margin: 0 0 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: .6;
+  }
+
+  .role {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .company {
+    margin: 4px 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* Isi markdown dirender jadi <p>, jadi gayanya diturunkan ke anak. */
+  .note :global(p) {
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--ink);
+    opacity: .8;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 680px) {
+    .exp { box-shadow: 6px 6px 0 var(--ink); }
+  }
+</style>

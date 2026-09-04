@@ -65,7 +65,8 @@ const siteSchema = z.object({
     .array(
       z.object({
         label: z.string().min(1),
-        metric: z.string(),
+        // Kosongkan kalau tidak ada angka yang benar-benar mau ditampilkan.
+        metric: z.string().default(''),
         url: z.url(),
         accent: z.enum(['accent', 'accent2', 'accent3']),
       }),
@@ -74,7 +75,7 @@ const siteSchema = z.object({
 
   nowPlaying: z.object({ label: z.string(), value: z.string() }),
 
-  footer: z.object({ credit: z.string(), locale: z.string() }),
+  footer: z.object({ locale: z.string() }),
 });
 
 export const site = siteSchema.parse(raw);

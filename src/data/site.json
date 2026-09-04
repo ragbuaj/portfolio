@@ -1,9 +1,9 @@
 {
-  "name": "Rangga Prawira",
+  "name": "Ragil Budhi Ajie",
   "initial": "R",
   "role": "Full Stack Developer",
-  "location": "Yogyakarta, ID",
-  "email": "halo@ranggaprawira.id",
+  "location": "Jakarta, ID",
+  "email": "ragbuaj@gmail.com",
   "theme": {
     "accent": "oklch(0.86 0.19 120)",
     "accent2": "oklch(0.70 0.19 8)",
@@ -11,8 +11,8 @@
     "tickerSpeed": 22
   },
   "hero": {
-    "eyebrowLeft": "Portofolio 2019 — 2026",
-    "eyebrowRight": "Yogyakarta, ID",
+    "eyebrowLeft": "Portofolio 2024 — 2026",
+    "eyebrowRight": "Jakarta, ID",
     "headline": [
       { "text": "Kode yang", "style": "plain" },
       { "text": "Berani", "style": "highlight" },
@@ -27,45 +27,48 @@
     "portraitLabel": "foto portrait — 4:5"
   },
   "ticker": [
+    "React",
+    "Vue & Nuxt",
     "TypeScript",
-    "Next.js",
-    "Node & Go",
-    "Postgres",
-    "Design System",
-    "DevOps"
+    "Golang",
+    "PostgreSQL",
+    "Docker"
   ],
   "stat": {
     "label": "Jam terbang",
-    "value": "9",
+    "value": "2",
     "unit": "TH",
-    "description": "Startup, agensi, dan freelance — 40+ produk dikirim ke produksi."
+    "description": "Fokus di aplikasi internal — sistem informasi, manajemen aset, dan manajemen proyek."
   },
   "tools": [
+    "React",
+    "Vue",
+    "Nuxt",
     "TypeScript",
-    "PostgreSQL",
-    "Next.js",
-    "Docker",
     "Tailwind",
-    "Terraform"
+    "Golang",
+    "PHP",
+    "PostgreSQL",
+    "Docker"
   ],
   "cta": {
     "heading": "Punya ide yang\nterlalu ramai?",
     "notes": [
-      "Slot Januari 2027 · 2 tersisa",
-      "Balas dalam 24 jam",
-      "Proyek mulai 15 juta"
+      "Terbuka untuk peluang baru",
+      "Jakarta · remote atau hybrid",
+      "React · Vue · Golang"
     ]
   },
   "socials": [
-    { "label": "Instagram", "metric": "18,4K", "url": "https://instagram.com/username", "accent": "accent" },
-    { "label": "GitHub", "metric": "1.4k ★", "url": "https://github.com/username", "accent": "accent2" }
+    { "label": "GitHub", "metric": "@ragbuaj", "url": "https://github.com/ragbuaj", "accent": "accent" },
+    { "label": "Instagram", "metric": "@ragilbuaj", "url": "https://www.instagram.com/ragilbuaj/", "accent": "accent2" },
+    { "label": "LinkedIn", "metric": "ragil-budhi-ajie", "url": "https://www.linkedin.com/in/ragil-budhi-ajie/", "accent": "accent3" }
   ],
   "nowPlaying": {
     "label": "Sedang dengar",
-    "value": "Dangdut koplo remix"
+    "value": "Synthwave"
   },
   "footer": {
-    "credit": "Dibuat sendiri — desain & kode",
-    "locale": "Yogyakarta"
+    "locale": "Jakarta"
   }
 }

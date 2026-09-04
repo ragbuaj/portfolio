@@ -8,9 +8,9 @@ import Hero from '../components/Hero.astro';
 import Portrait from '../components/Portrait.astro';
 import Ticker from '../components/Ticker.astro';
 import StatCard from '../components/StatCard.astro';
-import WorkCard from '../components/WorkCard.astro';
+import ProjectCarousel from '../components/ProjectCarousel.astro';
 import ToolsColumn from '../components/ToolsColumn.astro';
-import Testimonial from '../components/Testimonial.astro';
+import ExperienceCard from '../components/ExperienceCard.astro';
 import CtaCard from '../components/CtaCard.astro';
 import SocialGrid from '../components/SocialGrid.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -21,13 +21,7 @@ const byOrder = (a: { data: { order: number } }, b: { data: { order: number } })
 const allProjects = (await getCollection('projects', ({ data }) => !data.draft)).sort(byOrder);
 const featured = allProjects.filter((p) => p.data.featured);
 
-const testimonials = (await getCollection('testimonials', ({ data }) => !data.draft)).sort(byOrder);
-const quote = testimonials[0];
-
-// Ritme desain aslinya: STAT · KARYA·1 · KARYA·2 · PERKAKAS · KUTIPAN · KARYA·3.
-// Dua kartu pertama mengisi baris pertama, sisanya menyusul setelah kutipan.
-const firstRow = featured.slice(0, 2);
-const rest = featured.slice(2);
+const experience = (await getCollection('experience', ({ data }) => !data.draft)).sort(byOrder);
 ---
 
 <BaseLayout>
@@ -39,11 +33,10 @@ const rest = featured.slice(2);
       <Ticker items={site.ticker} />
 
       <StatCard />
-      {firstRow.map((project, i) => <WorkCard project={project} anchor={i === 0} />)}
+      <ProjectCarousel projects={featured} />
 
       <ToolsColumn title="Perkakas" items={site.tools} />
-      {quote && <Testimonial entry={quote} />}
-      {rest.map((project) => <WorkCard project={project} />)}
+      <ExperienceCard entries={experience} />
 
       <CtaCard />
       <SocialGrid />

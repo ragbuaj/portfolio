@@ -50,7 +50,7 @@ const frontmatter = (path) => {
 
 for (const [name, dir] of [
   ['projects', 'src/content/projects'],
-  ['testimonials', 'src/content/testimonials'],
+  ['experience', 'src/content/experience'],
 ]) {
   const collection = collections[name];
   const known = names(collection.fields);

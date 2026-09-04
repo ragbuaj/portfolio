@@ -1,0 +1,237 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import WorkCard from './WorkCard.astro';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+const { projects } = Astro.props;
+---
+
+<section id="karya" class="cell carousel" style="--span:9;--span-md:4" data-carousel>
+  <header class="bar">
+    <h2 class="label">Karya</h2>
+    <div class="ctrl" data-ctrl hidden>
+      <button class="nav" type="button" data-prev aria-label="Proyek sebelumnya">←</button>
+      <button class="nav" type="button" data-next aria-label="Proyek berikutnya">→</button>
+    </div>
+  </header>
+
+  <!-- tabindex supaya area geser ini bisa dijangkau dan digulir dari keyboard. -->
+  <div class="track" data-track tabindex="0" role="region" aria-label="Daftar proyek">
+    {
+      projects.map((project) => (
+        <div class="wrap">
+          <WorkCard project={project} />
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="dots" data-dots hidden></div>
+</section>
+
+<style>
+  /* Selnya sengaja tanpa border dan latar: kartu proyek di dalamnya sudah
+     jadi blok visualnya sendiri, jadi membungkusnya lagi hanya menghasilkan
+     kartu di dalam kartu. */
+  .carousel { display: flex; flex-direction: column; gap: 10px; }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 2px;
+  }
+
+  .label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--cream);
+    opacity: .7;
+  }
+
+  .ctrl { display: flex; gap: 8px; }
+
+  .nav {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: var(--line);
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    font-family: var(--font-mono);
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    transition:
+      transform .2s cubic-bezier(.2,.8,.2,1),
+      box-shadow .2s,
+      background .2s;
+  }
+  .nav:hover:not(:disabled) {
+    background: var(--accent);
+    transform: translate(-2px,-2px);
+    box-shadow: 4px 4px 0 var(--accent2);
+  }
+  .nav:disabled { opacity: .3; cursor: default; }
+
+  .track {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    /* Dimatikan lagi oleh skrip kalau jarak gesernya lebih pendek dari satu
+       slide — lihat tuneSnap() di bawah. */
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    /* Ruang untuk bayangan keras kartu saat di-hover (16px offset). */
+    padding: 6px 6px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--paper) transparent;
+  }
+
+  /* Sengaja dibuat tidak habis dibagi lebar track: kartu berikutnya selalu
+     mengintip sedikit, sehingga jelas deretnya bisa digeser. */
+  .wrap {
+    flex: 0 0 clamp(260px, 40%, 420px);
+    height: 300px;
+    scroll-snap-align: start;
+  }
+
+  .dots { display: flex; gap: 8px; padding: 0 2px; }
+
+  /* Titik indikator memakai kosakata bentuk yang sama dengan ✱ dan ◆
+     di ticker: kotak bersudut tajam yang miring saat aktif. */
+  .dots :global(.dot) {
+    width: 13px; height: 13px;
+    padding: 0;
+    border: 2px solid var(--cream);
+    background: transparent;
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.2,.8,.2,1), background .25s;
+  }
+  .dots :global(.dot[aria-current='true']) {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: rotate(45deg) scale(1.15);
+  }
+
+  /* Kartu naik dan lurus saat masuk ke area pandang. Dipasang di pembungkus,
+     bukan di kartunya: animasi dengan fill "both" akan mengunci transform
+     dan mematikan efek angkat saat hover. */
+  @keyframes slideEnter {
+    from { opacity: .2; transform: translateY(16px) rotate(-1.5deg); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .wrap {
+        animation: slideEnter linear both;
+        animation-timeline: view(inline);
+        animation-range: entry 0% entry 65%;
+      }
+    }
+  }
+
+  @media (max-width: 680px) {
+    .wrap { flex-basis: 82%; height: 270px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track { scroll-behavior: auto; }
+  }
+</style>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-track]');
+    const controls = root.querySelector<HTMLElement>('[data-ctrl]');
+    const dots = root.querySelector<HTMLElement>('[data-dots]');
+    if (!track || !controls || !dots) return;
+
+    const slides = Array.from(track.children) as HTMLElement[];
+    if (slides.length < 2) return;
+
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-next]');
+    if (!prev || !next) return;
+
+    const behavior = () => (reduced.matches ? 'auto' : 'smooth') as ScrollBehavior;
+
+    // Kontrol baru ditampilkan setelah skrip jalan. Tanpa JS, deretnya tetap
+    // bisa digeser lewat sentuh, trackpad, dan keyboard.
+    controls.hidden = false;
+    dots.hidden = false;
+
+    const buttons = slides.map((slide, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'dot';
+      dot.setAttribute('aria-label', `Ke proyek ${i + 1}`);
+      dot.addEventListener('click', () => {
+        // Diukur dari slide pertama, bukan dari track: offsetLeft track belum
+        // memperhitungkan padding-nya, sehingga slide pertama mendarat di 6px
+        // dan tombol "sebelumnya" tetap hidup padahal sudah di ujung kiri.
+        track.scrollTo({ left: slide.offsetLeft - slides[0].offsetLeft, behavior: behavior() });
+      });
+      dots.append(dot);
+      return dot;
+    });
+
+    const step = () => {
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      return slides[0].getBoundingClientRect().width + gap;
+    };
+
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: behavior() }));
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: behavior() }));
+
+    // Titik snap berjarak satu slide. Kalau seluruh jarak geser yang tersedia
+    // lebih pendek dari itu, tidak ada titik snap yang terjangkau selain yang
+    // pertama, dan browser menarik track kembali ke awal setiap kali digeser —
+    // carousel jadi mati total. Kasus ini muncul begitu jumlah proyeknya
+    // sedikit dan layarnya lebar, jadi harus diputuskan saat runtime.
+    const tuneSnap = (max: number) => {
+      track.style.scrollSnapType = max < step() ? 'none' : 'x proximity';
+    };
+
+    const sync = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      tuneSnap(max);
+      prev.disabled = track.scrollLeft <= 1;
+      next.disabled = track.scrollLeft >= max - 1;
+
+      // Slide teraktif = yang tepi kirinya paling dekat dengan tepi kiri track.
+      const base = slides[0].offsetLeft;
+      let active = 0;
+      let best = Infinity;
+      slides.forEach((slide, i) => {
+        const distance = Math.abs(slide.offsetLeft - base - track.scrollLeft);
+        if (distance < best) {
+          best = distance;
+          active = i;
+        }
+      });
+      // Saat mentok kanan, slide terakhir sudah tampil penuh walaupun tepi
+      // kirinya belum sampai ke tepi track — tanpa ini titik terakhir tidak
+      // pernah bisa aktif pada carousel yang kartunya mengintip.
+      if (max > 0 && track.scrollLeft >= max - 1) active = slides.length - 1;
+      buttons.forEach((dot, i) => dot.setAttribute('aria-current', String(i === active)));
+    };
+
+    track.addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
+    window.addEventListener('resize', sync);
+    sync();
+  });
+</script>

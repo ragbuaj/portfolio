@@ -4,29 +4,16 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   project: CollectionEntry<'projects'>;
-  /** Diteruskan ke id anchor section karya untuk kartu pertama. */
-  anchor?: boolean;
 }
 
-const { project, anchor = false } = Astro.props;
+const { project } = Astro.props;
 const d = project.data;
-
-// Pada grid 6 kolom, kartu karya jadi setengah baris. Hanya kartu yang
-// memang selebar hero (>=8 dari 12) yang tetap penuh — kalau tidak, akan
-// tersisa lubang 3 kolom di sebelahnya.
-const spanMd = d.span >= 8 ? 6 : 3;
-const styleVars = `--span:${d.span};--span-md:${spanMd}`;
 
 const Tag = d.url ? 'a' : 'article';
 const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
 ---
 
-<Tag
-  id={anchor ? 'karya' : undefined}
-  class:list={['cell', 'work', `work--${d.variant}`, 'card--lift']}
-  style={styleVars}
-  {...linkProps}
->
+<Tag class:list={['slide', `slide--${d.variant}`]} {...linkProps}>
   {
     d.variant === 'feature' ? (
       <>
@@ -51,6 +38,7 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
           </>
         )}
         <h2 class="title title--overlay">{d.title}</h2>
+        <p class="year">{d.year}</p>
       </>
     ) : (
       <>
@@ -65,9 +53,9 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
           )}
         </div>
         <div class="foot">
-          <div>
+          <div class="foot__text">
             <h2 class="title">{d.title}</h2>
-            {d.stack && <p class="stack">{d.stack}</p>}
+            <p class="stack">{d.stack ?? d.year}</p>
           </div>
           <span class="arrow" aria-hidden="true">↗</span>
         </div>
@@ -77,12 +65,19 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
 </Tag>
 
 <style>
-  .work {
+  /* Semua slide berukuran sama supaya deretannya rapi saat digeser.
+     Varian hanya mengubah warna dan susunan isinya. */
+  .slide {
     position: relative;
     overflow: hidden;
     border-radius: var(--r-md);
     display: block;
     color: inherit;
+    width: 100%;
+    height: 100%;
+    transition:
+      transform .28s cubic-bezier(.2,.8,.2,1),
+      box-shadow .28s cubic-bezier(.2,.8,.2,1);
   }
 
   .title {
@@ -95,15 +90,14 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
   }
 
   /* ---- showcase ---- */
-  .work--showcase {
+  .slide--showcase {
     background: var(--cream);
     border: var(--line);
     box-shadow: 8px 8px 0 var(--accent3);
     display: grid;
     grid-template-rows: 1fr auto;
-    min-height: 300px;
   }
-  .work--showcase:hover {
+  .slide--showcase:hover {
     transform: translate(-5px,-5px) rotate(-.5deg);
     box-shadow: 16px 16px 0 var(--accent3);
   }
@@ -124,7 +118,8 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
     gap: 12px;
     padding: 16px 18px;
   }
-  .work--showcase .title { font-size: 28px; color: var(--ink); line-height: 1; }
+  .foot__text { min-width: 0; }
+  .slide--showcase .title { font-size: 26px; color: var(--ink); line-height: 1; }
   .stack {
     margin: 6px 0 0;
     font-family: var(--font-mono);
@@ -147,7 +142,7 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
   }
 
   /* ---- feature ---- */
-  .work--feature {
+  .slide--feature {
     background: var(--ink);
     border: 2px solid var(--cream);
     padding: 20px;
@@ -155,9 +150,8 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
     flex-direction: column;
     justify-content: space-between;
     gap: 16px;
-    min-height: 300px;
   }
-  .work--feature:hover {
+  .slide--feature:hover {
     transform: translate(-5px,-5px) rotate(.5deg);
     box-shadow: 16px 16px 0 var(--accent);
   }
@@ -184,33 +178,42 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
     opacity: .7;
   }
   .body { position: relative; }
-  .title--big { font-size: 46px; line-height: .9; color: var(--cream); }
+  .title--big { font-size: 38px; line-height: .9; color: var(--cream); }
   .summary {
     margin: 12px 0 0;
     font-size: 14px;
     line-height: 1.5;
     color: var(--cream);
     opacity: .72;
-    max-width: 26ch;
   }
 
   /* ---- compact ---- */
-  .work--compact {
+  .slide--compact {
     background: var(--paper);
     border: var(--line);
-    min-height: 230px;
     display: grid;
     place-items: center;
   }
-  .work--compact:hover {
+  .slide--compact:hover {
     transform: translate(-5px,-5px);
     box-shadow: 14px 14px 0 var(--accent2);
   }
   .title--overlay {
     position: absolute;
     left: 14px; top: 14px;
+    right: 14px;
     font-size: 20px;
     color: var(--ink);
+  }
+  .year {
+    position: absolute;
+    left: 14px; bottom: 14px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    color: var(--ink);
+    opacity: .6;
   }
 
   .cover {
@@ -221,7 +224,6 @@ const linkProps = d.url ? { href: d.url, rel: 'noopener noreferrer' } : {};
   }
 
   @media (max-width: 680px) {
-    .work--showcase, .work--feature { min-height: 240px; }
-    .title--big { font-size: 36px; }
+    .title--big { font-size: 32px; }
   }
 </style>

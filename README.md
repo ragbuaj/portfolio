@@ -5,13 +5,14 @@ Seluruh isinya diedit lewat CMS, bukan lewat kode.
 
 ## Stack
 
-- **Astro 7** — output statis, **0 KB JavaScript** terkirim ke browser
+- **Astro 7** — output statis
 - **Content Collections** — konten tervalidasi skema Zod 4
 - **Decap CMS** — editor berbasis Git di `/admin`
 - **astro:assets** (sharp) — optimasi gambar otomatis
 - Backend: **tidak ada**
 
-Ukuran build saat ini: ~41 KB total (HTML + satu file CSS), tanpa tag `<script>`.
+Build saat ini ~53 KB: HTML + satu file CSS + **1,4 KB JavaScript inline**
+(hanya untuk tombol dan titik carousel — tidak ada permintaan jaringan tambahan).
 
 ## Perintah
 
@@ -29,7 +30,7 @@ npm run verify:cms  # pastikan config.yml sejalan dengan skema konten
 |---|---|---|
 | Profil, hero, palet, ticker, statistik, perkakas, CTA, sosial, footer | `src/data/site.json` | Pengaturan Situs |
 | Proyek | `src/content/projects/*.md` | Proyek |
-| Testimoni | `src/content/testimonials/*.md` | Testimoni |
+| Riwayat kerja | `src/content/experience/*.md` | Riwayat Kerja |
 | Gambar sampul | `src/content/projects/images/` | otomatis saat unggah |
 
 Sumber kebenaran skema ada di `src/lib/site.ts` dan `src/content.config.ts`.
@@ -53,25 +54,42 @@ Lalu jalankan `npm run dev` di terminal lain dan buka http://localhost:4321/admi
 3. Siapkan GitHub OAuth provider, isi `base_url`-nya di config yang sama.
 4. Ganti `site:` di `astro.config.mjs` ke domain final.
 
-## Tentang layout bento
+## Layout bento
 
-Grid-nya 12 kolom dan di-tile manual, persis seperti desain aslinya:
+Grid 12 kolom, di-tile manual seperti desain aslinya:
 
 ```
-12                    topbar
-8 + 4                 hero + portrait
-12                    ticker
-3 + 5 + 4             statistik + karya + karya
-3 + 5 + 4             perkakas + testimoni + karya
-8 + 4                 ajakan kontak + sosial
-12                    footer
+12          topbar
+8 + 4       hero + portrait
+12          ticker
+3 + 9       statistik + carousel karya
+3 + 9       perkakas + riwayat kerja
+8 + 4       ajakan kontak + sosial
+12          footer
 ```
 
-Field `span` pada tiap proyek mengendalikan lebarnya. **Usahakan tiap baris
-berjumlah 12** supaya grid tetap rapat; kalau tidak pas, kartunya tetap tampil
-tapi barisnya menyisakan ruang kosong.
+Di bawah 1100px grid jadi 6 kolom (`--span-md`, disetel per komponen supaya
+tiap baris tetap genap), di bawah 680px jadi satu kolom.
 
-Di bawah 1100px grid jadi 6 kolom (`--span-md`), di bawah 680px jadi satu kolom.
+## Carousel karya
+
+Kartu proyek ada di deret geser, bukan di sel bento terpisah. Yang perlu
+diketahui kalau nanti diutak-atik:
+
+- Deretnya berfungsi **tanpa JavaScript** — bisa digeser lewat sentuh,
+  trackpad, dan keyboard. Tombol panah dan titik indikator baru muncul setelah
+  skrip jalan.
+- Lebar slide sengaja tidak habis membagi lebar track, supaya kartu berikutnya
+  selalu mengintip sedikit sebagai isyarat bahwa deretnya bisa digeser.
+- `scroll-snap-type` **dimatikan saat runtime** kalau seluruh jarak geser lebih
+  pendek dari satu slide. Tanpa itu browser tidak menemukan titik snap yang
+  terjangkau dan mengunci deret di posisi awal — carousel mati total. Kasus ini
+  muncul begitu proyeknya sedikit dan layarnya lebar.
+- Animasi masuk kartu dipasang di elemen pembungkus, bukan di kartunya.
+  Animasi dengan `fill: both` akan mengunci `transform` dan mematikan efek
+  angkat saat hover.
+- Field `variant` hanya mengubah warna dan susunan isi kartu; semua slide
+  berukuran sama.
 
 ## Yang berbeda dari file desain
 
