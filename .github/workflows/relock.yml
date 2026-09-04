@@ -1,0 +1,41 @@
+name: Lengkapi lock file di Linux
+
+# Berkas ini sementara. Pengembangan dilakukan di Windows, sedangkan runner
+# memakai Linux — dan npm tidak bisa mengambil metadata dependency opsional
+# untuk platform yang tidak sedang dipakai. Akibatnya lock buatan Windows
+# kehilangan beberapa entri, dan `npm ci` di Linux menolak jalan.
+#
+# Jalankan lewat Actions -> Run workflow, lalu unduh artefaknya dan commit
+# lock file yang dihasilkan. Setelah lock-nya sehat, berkas ini boleh dihapus.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  relock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # Lock yang ada tidak dihapus, hanya dilengkapi: entri untuk platform
+      # lain yang sudah tercatat tetap dipertahankan.
+      - name: Lengkapi lock file
+        run: npm install --package-lock-only --no-audit --no-fund
+
+      - name: Pastikan npm ci sekarang jalan
+        run: npm ci --no-audit --no-fund
+
+      - name: Pastikan build juga jalan
+        run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: package-lock
+          path: package-lock.json
+          retention-days: 1
