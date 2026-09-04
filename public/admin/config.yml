@@ -1,0 +1,65 @@
+# Konfigurasi Decap CMS.
+# PENTING: field di sini harus sejalan dengan src/content.config.ts.
+# Kalau tidak, editor bisa menyimpan data yang membuat build gagal.
+
+backend:
+  name: github
+  repo: USERNAME/REPO # ← ganti setelah repo dibuat di GitHub
+  branch: main
+  # Butuh OAuth provider. Paling ringan: Cloudflare Worker / Netlify.
+  # base_url: https://oauth-anda.example.com
+
+# Memungkinkan uji coba /admin di localhost tanpa OAuth sama sekali.
+# Jalankan `npx decap-server` di terminal terpisah, lalu buka /admin.
+local_backend: true
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: site
+    label: Pengaturan Situs
+    files:
+      - name: profile
+        label: Profil
+        file: src/data/site.json
+        fields:
+          - { name: name, label: Nama, widget: string }
+          - { name: role, label: Peran, widget: string }
+          - { name: tagline, label: Tagline, widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: location, label: Lokasi, widget: string }
+          - { name: about, label: Tentang, widget: text }
+          - name: socials
+            label: Media Sosial
+            widget: list
+            fields:
+              - { name: label, label: Nama, widget: string }
+              - { name: url, label: URL, widget: string }
+
+  - name: projects
+    label: Proyek
+    folder: src/content/projects
+    create: true
+    # Path relatif supaya astro:assets bisa mengoptimasi gambarnya
+    # (WebP + srcset). Kalau dibuat absolut ke /uploads, image() di
+    # src/content.config.ts tidak bisa me-resolve-nya dan build gagal.
+    media_folder: images
+    public_folder: ./images
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    fields:
+      - { name: title, label: Judul, widget: string }
+      - { name: summary, label: Ringkasan, widget: text }
+      - { name: year, label: Tahun, widget: number, value_type: int, min: 1990, max: 2100 }
+      - { name: role, label: Peran, widget: string, required: false }
+      - { name: tags, label: Tag, widget: list, default: [] }
+      - { name: cover, label: Gambar Sampul, widget: image, required: false }
+      - { name: coverAlt, label: Teks Alt Sampul, widget: string, default: '', required: false }
+      - { name: url, label: URL Live, widget: string, required: false }
+      - { name: repo, label: URL Repo, widget: string, required: false }
+      - { name: order, label: Urutan, widget: number, value_type: int, default: 999 }
+      - { name: featured, label: Unggulan, widget: boolean, default: false }
+      - { name: draft, label: Draf, widget: boolean, default: false }
+      - { name: body, label: Isi, widget: markdown, required: false }

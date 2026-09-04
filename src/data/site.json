@@ -1,0 +1,12 @@
+{
+  "name": "Nama Anda",
+  "role": "Frontend Engineer",
+  "tagline": "Satu kalimat tentang apa yang Anda kerjakan.",
+  "email": "halo@example.com",
+  "location": "Jakarta, Indonesia",
+  "about": "Paragraf perkenalan singkat. Diedit lewat /admin, bukan lewat kode.",
+  "socials": [
+    { "label": "GitHub", "url": "https://github.com/username" },
+    { "label": "LinkedIn", "url": "https://linkedin.com/in/username" }
+  ]
+}
