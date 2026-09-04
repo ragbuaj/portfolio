@@ -58,8 +58,9 @@ Lalu jalankan `npm run dev` di terminal lain dan buka http://localhost:4321/admi
 
 Grid 12 kolom, di-tile manual seperti desain aslinya:
 
+(Header berada di luar grid — lihat "Header menempel" di bawah.)
+
 ```
-12          topbar
 8 + 4       hero + portrait
 12          ticker
 3 + 9       statistik + carousel karya
