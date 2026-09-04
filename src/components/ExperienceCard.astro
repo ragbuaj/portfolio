@@ -71,6 +71,9 @@ const rendered = await Promise.all(
     border-left: var(--line);
     padding-left: 14px;
     min-width: 0;
+    /* Dengan satu entri, kolomnya meregang selebar kartu dan baris
+       keterangan jadi ~1000px — terlalu panjang untuk dibaca nyaman. */
+    max-width: 420px;
   }
 
   .period {

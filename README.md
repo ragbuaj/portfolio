@@ -71,6 +71,10 @@ Grid 12 kolom, di-tile manual seperti desain aslinya:
 Di bawah 1100px grid jadi 6 kolom (`--span-md`, disetel per komponen supaya
 tiap baris tetap genap), di bawah 680px jadi satu kolom.
 
+Selokan grid 18px, bukan 12px seperti desain aslinya: kartunya melempar bayangan
+keras sejauh 8–10px ke dalam selokan itu, sehingga pada 12px hanya tersisa 2px
+bersih dan bayangan merah kartu kontak menempel ke kartu sosial di sebelahnya.
+
 ## Carousel karya
 
 Kartu proyek ada di deret geser, bukan di sel bento terpisah. Yang perlu
@@ -90,6 +94,22 @@ diketahui kalau nanti diutak-atik:
   angkat saat hover.
 - Field `variant` hanya mengubah warna dan susunan isi kartu; semua slide
   berukuran sama.
+
+## Header menempel
+
+Header sengaja dirender **di luar `.bento`**, bukan sebagai sel grid. Containing
+block sebuah elemen sticky yang jadi grid item adalah grid area-nya sendiri —
+sebagian browser mengurungnya di situ sehingga headernya tidak pernah benar-benar
+menempel. Di luar grid, perilakunya sama di semua browser.
+
+Dua hal yang ikut terpengaruh kalau isinya diubah:
+
+- `--sticky-offset` di `global.css` harus mengikuti tinggi header, karena dipakai
+  sebagai `scroll-margin-top` sasaran `#karya`, `#tentang`, dan `#kontak`. Tanpa
+  itu, lompatan anchor mendarat di balik header.
+- Versi lengkap header memakan 17% layar ponsel. Peran dan status ketersediaan
+  disembunyikan di bawah 680px supaya tinggal 12%; keduanya masih tampil di kartu
+  kontak.
 
 ## Yang berbeda dari file desain
 

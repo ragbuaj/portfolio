@@ -21,6 +21,9 @@
   --font-display: 'Anton', Impact, sans-serif;
   --font-body: 'Space Grotesk', system-ui, sans-serif;
   --font-mono: 'Space Mono', ui-monospace, monospace;
+
+  /* Tinggi header menempel + jarak napas, dipakai scroll-margin anchor. */
+  --sticky-offset: 92px;
 }
 
 * { box-sizing: border-box; }
@@ -42,6 +45,10 @@ a:hover { color: var(--accent2); }
   outline-offset: 3px;
   border-radius: 4px;
 }
+
+/* Tanpa ini, lompatan ke #karya / #tentang / #kontak mendarat di balik
+   header yang menempel. */
+:where(#karya, #tentang, #kontak) { scroll-margin-top: var(--sticky-offset, 96px); }
 
 .visually-hidden {
   position: absolute;
@@ -75,7 +82,10 @@ a:hover { color: var(--accent2); }
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 12px;
+  /* Desain aslinya memakai 12px, tapi kartunya melempar bayangan keras
+     sejauh 8-10px ke dalam selokan itu — hanya menyisakan 2px bersih, dan
+     bayangan merah kartu kontak jadi menempel ke kartu sosial di sebelahnya. */
+  gap: 18px;
   align-content: start;
 }
 
@@ -88,7 +98,8 @@ a:hover { color: var(--accent2); }
 }
 
 @media (max-width: 680px) {
-  .bento { grid-template-columns: 1fr; gap: 10px; }
+  :root { --sticky-offset: 116px; }
+  .bento { grid-template-columns: 1fr; gap: 14px; }
   .cell { grid-column: 1 / -1; }
 }
 

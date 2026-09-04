@@ -14,15 +14,24 @@
     "eyebrowLeft": "Portofolio 2024 — 2026",
     "eyebrowRight": "Jakarta, ID",
     "headline": [
-      { "text": "Kode yang", "style": "plain" },
-      { "text": "Berani", "style": "highlight" },
-      { "text": "Bicara", "style": "outline" }
+      {
+        "text": "Rancang",
+        "style": "plain"
+      },
+      {
+        "text": "Bangun",
+        "style": "highlight"
+      },
+      {
+        "text": "Kirim",
+        "style": "outline"
+      }
     ],
     "intro": "Saya membangun produk web dari database sampai piksel terakhir — API yang rapi, antarmuka yang ramai tapi tetap cepat.",
     "ctaLabel": "Lihat semua proyek"
   },
   "availability": {
-    "status": "Terbuka Q4",
+    "status": "Terbuka untuk peluang",
     "badge": "Available for work",
     "portraitLabel": "foto portrait — 4:5"
   },
@@ -60,13 +69,28 @@
     ]
   },
   "socials": [
-    { "label": "GitHub", "metric": "@ragbuaj", "url": "https://github.com/ragbuaj", "accent": "accent" },
-    { "label": "Instagram", "metric": "@ragilbuaj", "url": "https://www.instagram.com/ragilbuaj/", "accent": "accent2" },
-    { "label": "LinkedIn", "metric": "ragil-budhi-ajie", "url": "https://www.linkedin.com/in/ragil-budhi-ajie/", "accent": "accent3" }
+    {
+      "label": "GitHub",
+      "metric": "@ragbuaj",
+      "url": "https://github.com/ragbuaj",
+      "accent": "accent"
+    },
+    {
+      "label": "Instagram",
+      "metric": "@ragilbuaj",
+      "url": "https://www.instagram.com/ragilbuaj/",
+      "accent": "accent2"
+    },
+    {
+      "label": "LinkedIn",
+      "metric": "ragil-budhi-ajie",
+      "url": "https://www.linkedin.com/in/ragil-budhi-ajie/",
+      "accent": "accent3"
+    }
   ],
   "nowPlaying": {
     "label": "Sedang dengar",
-    "value": "Synthwave"
+    "value": "Japanese pop"
   },
   "footer": {
     "locale": "Jakarta"

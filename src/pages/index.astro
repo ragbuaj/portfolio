@@ -26,8 +26,9 @@ const experience = (await getCollection('experience', ({ data }) => !data.draft)
 
 <BaseLayout>
   <div class="page">
+    <TopBar />
+
     <div class="bento">
-      <TopBar />
       <Hero projectCount={allProjects.length} />
       <Portrait />
       <Ticker items={site.ticker} />

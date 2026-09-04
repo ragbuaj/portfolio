@@ -2,7 +2,8 @@
 import { site } from '../lib/site';
 ---
 
-<header class="cell topbar" style="--span:12;--span-md:6">
+<header class="topbar-wrap">
+  <div class="topbar">
   <div class="brand">
     <span class="mark" aria-hidden="true">{site.initial}</span>
     <p class="name">
@@ -19,10 +20,23 @@ import { site } from '../lib/site';
       <span class="dot" aria-hidden="true"></span>
       {site.availability.status}
     </p>
-  </nav>
+    </nav>
+  </div>
 </header>
 
 <style>
+  /* Sengaja di luar .bento. Sebagai grid item, containing block elemen
+     sticky adalah grid area-nya sendiri — sebagian browser mengurungnya di
+     situ sehingga header tidak pernah benar-benar menempel. Di luar grid,
+     perilakunya sama di semua browser. */
+  .topbar-wrap {
+    position: sticky;
+    top: 8px;
+    z-index: 20;
+    max-width: 1500px;
+    margin: 0 auto 18px;
+  }
+
   .topbar {
     display: flex;
     align-items: center;
@@ -105,6 +119,17 @@ import { site } from '../lib/site';
   }
 
   @media (max-width: 680px) {
-    .topbar { flex-direction: column; align-items: flex-start; }
+    /* Header ini menempel, jadi tingginya dibayar terus-menerus. Versi
+       lengkapnya memakan 138px alias 17% layar ponsel, jadi peran dan status
+       disembunyikan di sini — keduanya masih tampil di kartu kontak. */
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+    }
+    .topbar-wrap { margin-bottom: 14px; }
+    .role, .status { display: none; }
+    .pill { padding: 6px 12px; }
   }
 </style>

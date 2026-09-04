@@ -104,7 +104,9 @@ const { cta, email } = site;
   }
 
   @media (max-width: 680px) {
-    .top { padding: 0 18px; }
+    /* Tanpa padding bawah, tombol email menempel ke teks berjalan karena
+       kartunya tidak lagi diregangkan oleh baris grid di layar sempit. */
+    .top { padding: 0 18px 20px; }
     .cta { box-shadow: 6px 6px 0 var(--accent2); }
   }
 </style>
