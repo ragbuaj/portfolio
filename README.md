@@ -86,6 +86,17 @@ yang ditemuinya saat itu — berfungsi, tapi tidak melindungi dari server palsu.
 `--delete` supaya aset lama tidak menumpuk, artinya berkas apa pun di folder itu
 yang tidak ada di `dist/` akan dihapus.
 
+### Kalau menambah atau memperbarui dependency
+
+Pengembangan di Windows, runner memakai Linux. npm tidak bisa mengambil metadata
+dependency opsional untuk platform yang tidak sedang dipakai, jadi `npm install`
+di Windows menghasilkan lock file yang kehilangan beberapa entri Linux — dan
+`npm ci` di runner menolak jalan.
+
+Setelah mengubah dependency, jalankan workflow **"Lengkapi lock file di Linux"**
+lewat tab Actions, unduh artefaknya, lalu commit `package-lock.json` hasilnya.
+Workflow itu hanya menambah entri yang kurang; entri platform lain tetap utuh.
+
 Contoh konfigurasi Nginx ada di `deploy/nginx.conf.example`, lengkap dengan
 aturan cache: berkas di `/_astro/` boleh di-cache setahun karena namanya
 ber-hash, sedangkan HTML tidak boleh — kalau ikut di-cache lama, pengunjung akan
