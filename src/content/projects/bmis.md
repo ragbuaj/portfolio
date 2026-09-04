@@ -2,7 +2,7 @@
 title: BMIS
 stack: Vue + Yii2 + Go + Postgres
 badge: Internal
-year: 2026
+year: 2025
 coverLabel: screenshot dashboard — 16:10
 coverAlt: ''
 variant: showcase
