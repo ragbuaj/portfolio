@@ -96,6 +96,19 @@ diketahui kalau nanti diutak-atik:
 - Field `variant` hanya mengubah warna dan susunan isi kartu; semua slide
   berukuran sama.
 
+## Animasi masuk saat digulir
+
+Sel bento muncul sambil naik begitu masuk layar. Tiga hal yang menahan
+implementasinya tetap aman:
+
+- Kelas `.reveal` dipasang dari skrip, bukan dari markup. Kalau skripnya gagal
+  dimuat, halaman tetap tampil utuh alih-alih kosong permanen.
+- Hanya sel yang **belum terlihat** saat halaman dibuka yang dipasangi kelas itu,
+  supaya sel di layar awal tidak berkedip gelap-terang.
+- Yang digeser adalah properti `translate`, bukan `transform`. Beberapa kartu
+  memakai `transform` untuk efek angkat saat hover; memakai properti yang sama
+  akan membuat nilai akhir animasi menimpa hover-nya.
+
 ## Header menempel
 
 Header sengaja dirender **di luar `.bento`**, bukan sebagai sel grid. Containing
@@ -123,6 +136,13 @@ Dua jenis tautan sengaja **tidak** diberi `target="_blank"`:
   memuat ulang halaman yang sama alih-alih menggulir ke bagiannya.
 - `mailto:`. Di banyak browser ini meninggalkan tab kosong setelah aplikasi
   surel terbuka.
+
+Alamat surel di kartu kontak **menyalin dirinya ke clipboard** saat diklik,
+bukan memanggil handler `mailto:`. Alasannya: `mailto:` selalu menyerahkan ke
+aplikasi surel bawaan sistem, yang di Windows memunculkan prompt "buka Outlook".
+Menggantinya dengan tautan Gmail hanya memindahkan masalah ke pengunjung yang
+memakai klien lain. `href="mailto:"`-nya tetap ada sebagai cadangan kalau skrip
+gagal dimuat atau clipboard ditolak browser.
 
 Panah ↗ pada kartu proyek hanya digambar kalau proyeknya punya `url`. Tanpa itu
 kartunya dirender sebagai `<article>`, bukan `<a>`, supaya tidak ada isyarat
