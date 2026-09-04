@@ -18,7 +18,18 @@ import SiteFooter from '../components/SiteFooter.astro';
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) =>
   a.data.order - b.data.order;
 
-const allProjects = (await getCollection('projects', ({ data }) => !data.draft)).sort(byOrder);
+/**
+ * Proyek terbaru tampil lebih dulu. Diurutkan dari `year`, bukan dari `order`,
+ * supaya proyek yang ditambahkan nanti langsung mendarat di tempat yang benar
+ * tanpa perlu menomori ulang yang lain. `order` tetap dipakai untuk menentukan
+ * urutan antar-proyek pada tahun yang sama.
+ */
+const byNewest = (
+  a: { data: { year: number; order: number } },
+  b: { data: { year: number; order: number } },
+) => b.data.year - a.data.year || a.data.order - b.data.order;
+
+const allProjects = (await getCollection('projects', ({ data }) => !data.draft)).sort(byNewest);
 const featured = allProjects.filter((p) => p.data.featured);
 
 const experience = (await getCollection('experience', ({ data }) => !data.draft)).sort(byOrder);

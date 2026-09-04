@@ -6,7 +6,7 @@ year: 2025
 coverLabel: screenshot dashboard — 16:10
 coverAlt: ''
 variant: showcase
-order: 1
+order: 2
 featured: true
 draft: false
 ---

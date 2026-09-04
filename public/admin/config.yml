@@ -181,7 +181,12 @@ collections:
           - { label: Gambar penuh judul menimpa, value: compact }
       - { name: url, label: URL Live, widget: string, required: false }
       - { name: repo, label: URL Repo, widget: string, required: false }
-      - { name: order, label: Urutan, widget: number, value_type: int, default: 999 }
+      - name: order
+        label: Urutan
+        widget: number
+        value_type: int
+        default: 999
+        hint: Hanya dipakai kalau ada dua proyek di tahun yang sama. Urutan utamanya dari Tahun, terbaru dulu.
       - { name: featured, label: Tampil di Halaman Depan, widget: boolean, default: false }
       - { name: draft, label: Draf, widget: boolean, default: false }
       - { name: body, label: Isi, widget: markdown, required: false }

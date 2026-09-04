@@ -8,7 +8,7 @@ kicker: Studi kasus 02
 badge: Internal
 summary: Manajemen fixed asset — tracking, stock opname, dan penilaian aset.
 variant: feature
-order: 2
+order: 1
 featured: true
 draft: false
 ---
